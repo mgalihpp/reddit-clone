@@ -1,0 +1,158 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+enum VoteType {
+  UP
+  DOWN
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  sessionToken String   @unique
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  username      String?   @unique
+  image         String?
+
+  createdSubreddits Subreddit[]    @relation("CreatedBy")
+  subscriptions     Subscription[]
+  votes             Vote[]
+  accounts          Account[]
+  sessions          Session[]
+  Post              Post[]
+  Comment           Comment[]
+  CommentVote       CommentVote[]
+}
+
+model Subreddit {
+  id        String   @id @default(cuid())
+  creatorId String?
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
+  posts       Post[]
+  subscribers Subscription[]
+
+  @@index([name])
+  @@index([creatorId])
+}
+
+model Subscription {
+  userId      String
+  subredditId String
+
+  user      User      @relation(fields: [userId], references: [id])
+  subreddit Subreddit @relation(fields: [subredditId], references: [id])
+
+  @@id([userId, subredditId])
+  @@index([subredditId])
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  authorId    String
+  subredditId String
+  title       String
+  content     Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  author      User      @relation(fields: [authorId], references: [id])
+  subreddit   Subreddit @relation(fields: [subredditId], references: [id])
+  comments    Comment[]
+  votes       Vote[]
+
+  @@index([authorId])
+  @@index([subredditId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  authorId  String
+  postId    String
+  replyToId String?
+  text      String
+  createdAt DateTime @default(now())
+
+  author User @relation(fields: [authorId], references: [id])
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  replyTo Comment?  @relation("ReplyTo", fields: [replyToId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  replies Comment[] @relation("ReplyTo")
+
+  votes     CommentVote[]
+  commentId String?
+
+  @@index([authorId])
+  @@index([postId])
+  @@index([replyToId])
+}
+
+model Vote {
+  userId String
+  postId String
+
+  user User     @relation(fields: [userId], references: [id])
+  post Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  type VoteType
+
+  @@id([userId, postId])
+  @@index([postId])
+}
+
+model CommentVote {
+  userId    String
+  commentId String
+
+  user    User     @relation(fields: [userId], references: [id])
+  comment Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  type    VoteType
+
+  @@id([userId, commentId])
+  @@index([commentId])
+}

@@ -1,0 +1,32 @@
+{
+    "compilerOptions": {
+        "outDir": "dist",
+        "baseUrl": "src",
+        "target": "ESNext",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "strict": true,
+        "downlevelIteration": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "skipLibCheck": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "sourceMap": false,
+        "declaration": false,
+        "strictNullChecks": true,
+        "noEmit": false,
+        "noImplicitAny": false,
+        "noImplicitReturns": false,
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "ts-node": {
+        "compilerHost": true,
+        "transpileOnly": true,
+        "files": true,
+        "pretty": true
+    }
+}
