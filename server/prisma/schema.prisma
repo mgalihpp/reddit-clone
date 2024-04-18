@@ -57,6 +57,7 @@ model User {
   emailVerified DateTime?
   username      String?   @unique
   image         String?
+  password      String?
 
   createdSubreddits Subreddit[]    @relation("CreatedBy")
   subscriptions     Subscription[]

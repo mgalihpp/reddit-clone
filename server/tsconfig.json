@@ -3,8 +3,8 @@
         "outDir": "dist",
         "baseUrl": "src",
         "target": "ESNext",
-        "module": "CommonJS",
-        "moduleResolution": "Node",
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
         "strict": true,
         "downlevelIteration": true,
         "esModuleInterop": true,
@@ -19,11 +19,25 @@
         "noEmit": false,
         "noImplicitAny": false,
         "noImplicitReturns": false,
+        "paths": {
+            "@/*": ["*"],
+            "@configs/*": ["configs/*"],
+            "@controllers/*": ["controllers/*"],
+            "@helpers/*": ["helpers/*"],
+            "@interfaces/*": ["interfaces/*"],
+            "@libs/*": ["libs/*"],
+            "@middlewares/*": ["middlewares/*"],
+            "@validators/*": ["validators/*"],
+            "@models/*": ["models/*"],
+            "@routes/*": ["routes/*"],
+            "@services/*": ["services/*"]
+          },
     },
     "include": [
         "src/**/*.ts"
     ],
     "ts-node": {
+        "require": ["tsconfig-paths/register"],
         "compilerHost": true,
         "transpileOnly": true,
         "files": true,
