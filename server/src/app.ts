@@ -1,5 +1,6 @@
 import express from "express";
 import session from "express-session";
+import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import indexRouter from "@routes/index-routes";
@@ -17,10 +18,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: process.env.JWT_SECRET!,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: true },
+  })
+);
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   })
 );
 app.use(express.static(path.join(__dirname, "public")));
@@ -30,7 +37,7 @@ app.use("/", indexRouter);
 app.use("/protected", authenticatedToken, (req, res) => {
   res.send(req.user);
 });
-app.use("/users", userRouter);
+app.use("/api/users", userRouter);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -35,7 +35,7 @@ class AuthController {
       return res
         .status(HttpStatus.OK)
         .json({
-          message: "Login Succesfully",
+          message: "Login successfully",
           user,
           token: accessToken,
           sessionToken: sessionToken,
