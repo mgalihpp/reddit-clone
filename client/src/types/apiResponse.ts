@@ -3,11 +3,13 @@ export type LoginResponse = {
   user: User;
   token: string;
   sessionToken: string;
+  error?: string;
 };
 
 export type RegisterResponse = {
   message: string;
-  newUser: User;
+  user: User;
   token: string;
   sessionToken: string;
+  error?: string;
 };

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AuthState } from "@/types/authTypes";
 import type { RootState } from "@/store";
 import { login, register } from "@/actions/authActions";
+import { handleAxiosError } from "@/utils/handleError";
 
 const initialState: AuthState = {
   user: null,
@@ -28,9 +29,9 @@ const authSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(login.rejected, (state, action) => {
-        console.error("Login failed:", action.error);
+        console.error("Login failed:", handleAxiosError(action.error, "login"));
         state.loading = false;
-        state.error = action.error;
+        state.error = handleAxiosError(action.error, "login");
       })
       .addCase(register.pending, (state) => {
         console.log("Registering...");
@@ -40,19 +41,22 @@ const authSlice = createSlice({
       .addCase(register.fulfilled, (state, action) => {
         console.log("Registration successful:", action.payload);
         state.loading = false;
-        state.user = action.payload.newUser;
+        state.user = action.payload.user;
         state.token = action.payload.token;
       })
       .addCase(register.rejected, (state, action) => {
-        console.error("Registration failed:", action.error);
+        console.error(
+          "Registration failed:",
+          handleAxiosError(action.error, "register")
+        );
         state.loading = false;
-        state.error = action.error;
+        state.error = handleAxiosError(action.error, "register");
       });
   },
 });
 
 export const loadingState = (state: RootState) => state.auth.loading;
 export const errorState = (state: RootState) => state.auth.error;
-export const userData = (state: RootState) => state.auth.user;
+export const getCurrentUser = (state: RootState) => state.auth.user;
 
 export default authSlice.reducer;

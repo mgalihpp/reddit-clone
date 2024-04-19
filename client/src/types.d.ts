@@ -7,3 +7,5 @@ type User = {
     image: string | null;
     password: string | null;
 }
+
+type newUser = Omit<User, "id" | "username" | "image" | "emailVerified">

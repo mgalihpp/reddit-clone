@@ -32,14 +32,15 @@ class AuthController {
         password
       );
 
-      return res
-        .status(HttpStatus.OK)
-        .json({
-          message: "Login successfully",
-          user,
-          token: accessToken,
-          sessionToken: sessionToken,
-        });
+      // Create a new user object without the password field
+      delete (user as any)?.password;
+
+      return res.status(HttpStatus.OK).json({
+        message: "Login successfully",
+        user,
+        token: accessToken,
+        sessionToken: sessionToken,
+      });
     } catch (error) {
       next(error);
     }
@@ -69,6 +70,9 @@ class AuthController {
         req.body
       );
 
+      // Create a new user object without the password field
+      delete (newUser as any)?.password;
+      
       // Customize the HTTP response for successful registration
       return res.status(HttpStatus.CREATED).json({
         message: "User registered successfully",

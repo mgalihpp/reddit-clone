@@ -11,8 +11,11 @@ export const login = createAsyncThunk(
   }
 );
 
-export const register = createAsyncThunk("register", async (userData: User) => {
-  const { data } = await AuthService.register(userData);
-  token.setAuthToken(data.token);
-  return data;
-});
+export const register = createAsyncThunk(
+  "register",
+  async (getCurrentUser: newUser) => {
+    const { data } = await AuthService.register(getCurrentUser);
+    token.setAuthToken(data.token);
+    return data;
+  }
+);
