@@ -76,10 +76,12 @@ class AuthService {
       }
 
       const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const validName = userData?.name?.split(' ').join('').toLowerCase();
 
       const newUser = await db.user.create({
         data: {
           ...userData,
+          image: `https://avatar.vercel.sh/${validName}.svg`,
           password: hashedPassword,
         },
       });
