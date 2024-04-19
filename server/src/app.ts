@@ -4,9 +4,9 @@ import cors from "cors";
 import path from "path";
 import dotenv from "dotenv";
 import indexRouter from "@routes/index-routes";
-import userRouter from "@routes/auth-routes";
+import authRouter from "@routes/auth-routes";
+import userRouter from "@routes/user-routes";
 import { errorHandler } from "@middlewares/error-handlers";
-import { authenticatedToken } from "@middlewares/authenticated-token";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -34,9 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 app.use("/", indexRouter);
-app.use("/protected", authenticatedToken, (req, res) => {
-  res.send(req.user);
-});
+app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 
 // Error handling middleware

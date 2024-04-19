@@ -1,10 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
 import HttpStatus from "http-status-codes";
 import { HttpError } from "./error-handlers";
-import jwt from "jsonwebtoken";
-import type { User } from "@prisma/client";
+import UserService from "@/services/user-service";
 
-export const authenticatedToken = (
+export const authenticatedToken = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,13 +17,13 @@ export const authenticatedToken = (
     );
   }
 
-  jwt.verify(token, process.env.JWT_SECRET!, (err, user) => {
-    if (err) {
-      return next(
-        new HttpError(HttpStatus.FORBIDDEN, "Invalid or expired token")
-      );
-    }
-    req.user = user as User;
+  try {
+    const user = await UserService.verifyTokenAndGetUser(token);
+    req.user = user;
     next();
-  });
+  } catch (error) {
+    return next(
+      new HttpError(HttpStatus.FORBIDDEN, "Invalid or expired token")
+    );
+  }
 };
