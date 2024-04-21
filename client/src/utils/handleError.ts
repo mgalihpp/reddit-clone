@@ -36,7 +36,7 @@ export const handleAxiosError = (
         case 400:
           return {
             name: "BadRequestError",
-            message: "Invalid User email already exists, Please login",
+            message: "Invalid credentials",
             code: error.code,
             stack: error.stack,
           };
@@ -47,6 +47,11 @@ export const handleAxiosError = (
             code: error.code,
             stack: error.stack,
           };
+        case 409:
+          return{
+            name: 'Conflict',
+            message: 'User email already exists, Please login'
+          }
       }
     }
   }

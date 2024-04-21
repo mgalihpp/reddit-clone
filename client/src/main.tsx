@@ -7,7 +7,7 @@ import { RouterProvider } from "react-router-dom";
 import { ToastContainer, Bounce } from "react-toastify";
 import store, { persistor } from "@/store";
 import { router } from "@/routes";
-import QueryProvider from "./providers/QueryClientProvider";
+import QueryProvider from "@/providers/QueryClientProvider";
 
 import("react-toastify/dist/ReactToastify.css");
 

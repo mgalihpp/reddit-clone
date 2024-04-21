@@ -6,6 +6,7 @@ import indexRouter from '@routes/index-routes';
 import authRouter from '@routes/auth-routes';
 import userRouter from '@routes/user-routes';
 import postRouter from '@routes/post-routes';
+import subredditRouter from '@routes/subreddit-routes';
 import { errorHandler } from '@middlewares/error-handlers';
 
 // Load environment variables from .env file
@@ -34,7 +35,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: 'http://localhost:4173',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   }),
 );
@@ -46,6 +47,7 @@ app.use('/', indexRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/subreddit', subredditRouter);
 
 // Error handling middleware
 app.use(errorHandler);

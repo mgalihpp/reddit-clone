@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/navbar/navbar";
 import Sidebar from "@/components/sidebar";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import React, { useEffect } from "react";
@@ -24,7 +24,7 @@ export default function RootLayout() {
 
       {/* Main Content */}
       <main
-        className={`flex overflow-y-auto h-[2000px] mx-auto max-w-7xl max-sm:px-4 px-4 bg-slate-50 text-slate-900 antialiased light ${
+        className={`flex overflow-y-auto mx-auto max-w-7xl max-sm:px-4 px-4 bg-slate-50 text-slate-900 antialiased light ${
           sidebarOpen ? "pl-56 xl:pl-72" : ""
         }`}
       >

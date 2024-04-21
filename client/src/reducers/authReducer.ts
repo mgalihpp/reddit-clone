@@ -3,6 +3,8 @@ import { AuthState } from "@/types/authTypes";
 import type { RootState } from "@/store";
 import { login, register } from "@/actions/authActions";
 import { handleAxiosError } from "@/utils/handleError";
+import session from "redux-persist/lib/storage/session";
+import storage from "redux-persist/lib/storage";
 
 const initialState: AuthState = {
   user: null,
@@ -14,7 +16,13 @@ const initialState: AuthState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    resetState: () => {
+      storage.removeItem("persits:root");
+      session.removeItem("persist:user");
+      return initialState;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(login.pending, (state) => {
@@ -58,5 +66,7 @@ const authSlice = createSlice({
 export const loadingState = (state: RootState) => state.auth.loading;
 export const errorState = (state: RootState) => state.auth.error;
 export const getCurrentUser = (state: RootState) => state.auth.user;
+export const getToken = (state: RootState) => state.auth.token;
+export const { resetState } = authSlice.actions;
 
 export default authSlice.reducer;

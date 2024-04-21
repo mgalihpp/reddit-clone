@@ -1,9 +1,9 @@
+import { db } from '@configs/db';
 import type { Account, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import { db } from '@configs/db';
-import HttpStatus from 'http-status-codes';
+import jwtToken from '@/utils/auth';
 import { HttpError } from '@middlewares/error-handlers';
-import JwtToken from '@/utils/auth';
+import HttpStatus from 'http-status-codes';
 
 class AuthService {
   async login(email: string, password: string) {
@@ -28,7 +28,7 @@ class AuthService {
     }
 
     // Generate access token
-    const accessToken = JwtToken.generateAccessToken(user);
+    const accessToken = jwtToken.generateAccessToken(user);
 
     // Create or update account entity
     await this.createOrUpdateAccount(user.id, {
@@ -42,7 +42,7 @@ class AuthService {
     });
 
     // Create session entity
-    const sessionToken = JwtToken.generateSessionToken(20);
+    const sessionToken = jwtToken.generateSessionToken(20);
     await db.session.create({
       data: {
         userId: user.id,
@@ -64,7 +64,7 @@ class AuthService {
       const isUserEmailExists = await this.checkUserEmail(userData.email as string);
 
       if (isUserEmailExists) {
-        throw new HttpError(HttpStatus.BAD_REQUEST, 'User email already exists');
+        throw new HttpError(HttpStatus.CONFLICT, 'User email already exists');
       }
 
       const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -79,7 +79,7 @@ class AuthService {
       });
 
       // Generate access token
-      const accessToken = JwtToken.generateAccessToken(newUser);
+      const accessToken = jwtToken.generateAccessToken(newUser);
 
       // Create or update account entity
       await this.createOrUpdateAccount(newUser.id, {
@@ -93,7 +93,7 @@ class AuthService {
       });
 
       // Create session entity
-      const sessionToken = JwtToken.generateSessionToken(20);
+      const sessionToken = jwtToken.generateSessionToken(20);
       await db.session.create({
         data: {
           userId: newUser.id,

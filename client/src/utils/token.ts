@@ -1,3 +1,5 @@
+import store from "@/store";
+
 class Token {
   // Method to set authentication token
   setAuthToken(token: string) {
@@ -16,9 +18,20 @@ class Token {
     // Implement token clearing logic here
     localStorage.removeItem("token"); // Example: Remove token from localStorage
   }
+
+  // Method to bring authorization headers
+  authorization() {
+    const token = store.getState().auth.token;
+
+    return {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+  }
 }
 
-export default new Token()
+export default new Token();
 
 // // Example usage:
 // const tokenManager = new Token();

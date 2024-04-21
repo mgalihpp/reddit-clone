@@ -1,7 +1,7 @@
-import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/configs';
-import { db } from '@/configs/db';
-import type { ExtendedPost, PostPayload } from '@/types/post';
 import type { Request } from 'express';
+import { db } from '@/configs/db';
+import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/configs';
+import type { ExtendedPost, PostPayload } from '@/types/post';
 
 class PostService {
   async getPosts(): Promise<ExtendedPost[]> {
@@ -57,10 +57,10 @@ class PostService {
 
     return posts;
   }
-  async getPostsByCriteria(req: Request, data: PostPayload): Promise<ExtendedPost[]> {
+  async getPostsByCriteria(req: Request, payload: PostPayload): Promise<ExtendedPost[]> {
     let followedCommunitiesIds: string[] = [];
     let whereClause = {};
-    const { subredditName, limit, page } = data;
+    const { subredditName, limit, page } = payload;
 
     // user must be authenticated
     if (req.user) {

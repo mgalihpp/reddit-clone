@@ -19,7 +19,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
         <ul className="mt-6 space-y-1">
           <li>
             <a
-              href="#"
+              href="/home"
               className="flex flex-grow gap-2 items-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
             >
               <Home className="size-4 sm:size-6 " />

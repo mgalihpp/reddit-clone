@@ -1,8 +1,8 @@
-import { HttpError } from '@/middlewares/error-handlers';
-import postService from '@/services/post-service';
-import PostValidators from '@/validators/post-validators';
 import type { NextFunction, Request, Response } from 'express';
+import postService from '@/services/post-service';
+import postValidators from '@/validators/post-validators';
 import { validationResult } from 'express-validator';
+import { HttpError } from '@/middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
 
 class PostController {
@@ -29,7 +29,7 @@ class PostController {
 
     // Validate request body against defined validation rules
     await Promise.all(
-      PostValidators.postPayloadValidationRules.map((validation) => validation.run(req)),
+      postValidators.postPayloadValidationRules.map((validation) => validation.run(req)),
     );
 
     // Check for validation errors
@@ -41,7 +41,7 @@ class PostController {
     try {
       const posts = await postService.getPostsByCriteria(req, postPayload);
 
-      return res.status(HttpStatus.OK).json(postPayload);
+      return res.status(HttpStatus.OK).json(posts);
     } catch (error) {
       next(new HttpError(HttpStatus.BAD_REQUEST, 'Failed to get post'));
     }
