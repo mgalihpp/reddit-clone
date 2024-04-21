@@ -1,10 +1,10 @@
 import { check, ValidationChain } from 'express-validator';
 
 class PostValidator {
-  postPayloadVlidationRules: ValidationChain[];
+  postPayloadValidationRules: ValidationChain[];
 
   constructor() {
-    this.postPayloadVlidationRules = [
+    this.postPayloadValidationRules = [
       check('subredditName').isString().optional(),
       check('limit').isString(),
       check('page').isString(),

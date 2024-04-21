@@ -29,7 +29,7 @@ class PostController {
 
     // Validate request body against defined validation rules
     await Promise.all(
-      PostValidators.postPayloadVlidationRules.map((validation) => validation.run(req)),
+      PostValidators.postPayloadValidationRules.map((validation) => validation.run(req)),
     );
 
     // Check for validation errors
