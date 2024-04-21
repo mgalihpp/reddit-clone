@@ -1,5 +1,5 @@
-import type { NextFunction, Request, Response } from "express";
-import HttpStatus from "http-status-codes";
+import type { NextFunction, Request, Response } from 'express';
+import HttpStatus from 'http-status-codes';
 
 class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {

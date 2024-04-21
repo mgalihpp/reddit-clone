@@ -1,5 +1,5 @@
 import http from 'http';
-import app from '@/app';
+import app from './app';
 
 // Get port from environment and store in Express.
 const port = normalizePort(process.env.PORT || '5000');
@@ -57,5 +57,5 @@ function onError(error: NodeJS.ErrnoException) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr?.port;
-  console.log('Server listening on ' + bind);
+  console.log(`\nServer listening on ${bind}\n\nHost: http://localhost:${port}`);
 }

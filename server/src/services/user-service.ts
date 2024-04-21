@@ -1,5 +1,5 @@
-import jwt from "jsonwebtoken";
-import { User } from "@prisma/client";
+import jwt from 'jsonwebtoken';
+import { User } from '@prisma/client';
 
 class UserService {
   verifyTokenAndGetUser(token: string): Promise<User> {

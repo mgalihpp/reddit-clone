@@ -1,9 +1,9 @@
-import type { Account, User } from "@prisma/client";
-import bcrypt from "bcrypt";
-import { db } from "@configs/db";
-import HttpStatus from "http-status-codes";
-import { HttpError } from "@middlewares/error-handlers";
-import JwtToken from "@/utils/auth";
+import type { Account, User } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import { db } from '@configs/db';
+import HttpStatus from 'http-status-codes';
+import { HttpError } from '@middlewares/error-handlers';
+import JwtToken from '@/utils/auth';
 
 class AuthService {
   async login(email: string, password: string) {
@@ -16,18 +16,15 @@ class AuthService {
     });
 
     if (!user) {
-      throw new HttpError(HttpStatus.UNAUTHORIZED, "Invalid Credentials");
+      throw new HttpError(HttpStatus.UNAUTHORIZED, 'Invalid Credentials');
     }
 
     // Compare passwords
 
-    const isPasswordMatch = await bcrypt.compare(
-      password,
-      user.password as string
-    );
+    const isPasswordMatch = await bcrypt.compare(password, user.password as string);
 
     if (!isPasswordMatch) {
-      throw new HttpError(HttpStatus.BAD_REQUEST, "Invalid Passwords");
+      throw new HttpError(HttpStatus.BAD_REQUEST, 'Invalid Passwords');
     }
 
     // Generate access token
@@ -36,11 +33,11 @@ class AuthService {
     // Create or update account entity
     await this.createOrUpdateAccount(user.id, {
       userId: user.id,
-      provider: "email",
-      type: "email",
+      provider: 'email',
+      type: 'email',
       providerAccountId: email,
       access_token: accessToken,
-      token_type: "jwt",
+      token_type: 'jwt',
       expires_at: 3600,
     });
 
@@ -61,18 +58,13 @@ class AuthService {
     // Logic to register user
     try {
       if (!userData.password) {
-        throw new HttpError(HttpStatus.BAD_REQUEST, "Password is required");
+        throw new HttpError(HttpStatus.BAD_REQUEST, 'Password is required');
       }
 
-      const isUserEmailExists = await this.checkUserEmail(
-        userData.email as string
-      );
+      const isUserEmailExists = await this.checkUserEmail(userData.email as string);
 
       if (isUserEmailExists) {
-        throw new HttpError(
-          HttpStatus.BAD_REQUEST,
-          "User email already exists"
-        );
+        throw new HttpError(HttpStatus.BAD_REQUEST, 'User email already exists');
       }
 
       const hashedPassword = await bcrypt.hash(userData.password, 10);
@@ -92,11 +84,11 @@ class AuthService {
       // Create or update account entity
       await this.createOrUpdateAccount(newUser.id, {
         userId: newUser.id,
-        provider: "email",
-        type: "email",
+        provider: 'email',
+        type: 'email',
         providerAccountId: newUser.email as string,
         access_token: accessToken,
-        token_type: "jwt",
+        token_type: 'jwt',
         expires_at: 3600,
       });
 
@@ -117,10 +109,7 @@ class AuthService {
       }
 
       // Throw a generic Internal Server Error for other errors
-      throw new HttpError(
-        HttpStatus.INTERNAL_SERVER_ERROR,
-        "Internal Server Error"
-      );
+      throw new HttpError(HttpStatus.INTERNAL_SERVER_ERROR, 'Internal Server Error');
     }
   }
 
@@ -148,10 +137,7 @@ class AuthService {
 
   async createOrUpdateAccount(
     userId: string,
-    data: Omit<
-      Account,
-      "id" | "id_token" | "refresh_token" | "scope" | "session_state"
-    >
+    data: Omit<Account, 'id' | 'id_token' | 'refresh_token' | 'scope' | 'session_state'>,
   ) {
     const existingAccount = await db.account.findFirst({
       where: {

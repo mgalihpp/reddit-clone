@@ -1,4 +1,4 @@
-import { check, ValidationChain } from "express-validator";
+import { check, ValidationChain } from 'express-validator';
 
 class AuthValidator {
   loginValidationRules: ValidationChain[];
@@ -6,21 +6,21 @@ class AuthValidator {
 
   constructor() {
     this.loginValidationRules = [
-      check("email").isEmail().withMessage("Invalid email format"),
-      check("password")
+      check('email').isEmail().withMessage('Invalid email format'),
+      check('password')
         .isLength({ min: 6 })
-        .withMessage("Password must be at least 6 characters long"),
+        .withMessage('Password must be at least 6 characters long'),
     ];
 
     this.registerValidationRules = [
-      check("name")
+      check('name')
         .isString()
         .isLength({ min: 4 })
-        .withMessage("Name must be at least 4 characters long"),
-      check("email").isEmail().withMessage("Invalid email format"),
-      check("password")
+        .withMessage('Name must be at least 4 characters long'),
+      check('email').isEmail().withMessage('Invalid email format'),
+      check('password')
         .isLength({ min: 6 })
-        .withMessage("Password must be at least 6 characters long"),
+        .withMessage('Password must be at least 6 characters long'),
     ];
   }
 }
