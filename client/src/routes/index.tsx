@@ -12,9 +12,12 @@ import SignIn from '@/components/auth/sign-in';
 import PrivateRoute from './private-route';
 import { SessionProvider } from '@/providers/SessionProvider';
 import NotFound from '@/not-found';
+import CreatePost from '@/pages/submit/create-post';
 
 const App = React.lazy(() => import('@/App'));
-const CreateCommunityPage = React.lazy(() => import('@/pages/r/create/create-community'),);
+const CreateCommunityPage = React.lazy(
+  () => import('@/pages/r/create/create-community'),
+);
 const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
 
 export const router = createBrowserRouter(
@@ -36,6 +39,7 @@ export const router = createBrowserRouter(
         <Route path="/home" element={<App />} />
         <Route path="/r/create" element={<CreateCommunityPage />} />
         <Route path="/r/:slug" element={<CommunitySlugPage />} />
+        <Route path="/r/:slug/submit" element={<CreatePost />} />
       </Route>
       {/* PROTECTED ROUTES */}
 

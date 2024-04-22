@@ -24,4 +24,18 @@ export const PostService = {
 
     return data;
   },
+
+  createPost: async (payload: {
+    title: string;
+    content?: unknown;
+    subredditId: string;
+  }) => {
+    const { data } = await apiInstance.post<Post>(
+      '/api/posts/create',
+      payload,
+      token.authorization(),
+    );
+
+    return data;
+  },
 };

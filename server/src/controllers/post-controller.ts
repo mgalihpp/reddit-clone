@@ -46,6 +46,31 @@ class PostController {
       next(new HttpError(HttpStatus.BAD_REQUEST, 'Failed to get post'));
     }
   }
+
+  async createPost(req: Request, res: Response, next: NextFunction) {
+    const postPayload = req.body;
+
+    // Validate request body against defined validation rules
+    await Promise.all(
+      postValidators.createPostPayloadValidationRules.map((validation) =>
+        validation.run(req),
+      ),
+    );
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+    }
+    // If validation passes, proceed with post logic
+    try {
+      const post = await postService.createPost(req, postPayload);
+
+      return res.status(HttpStatus.OK).json(post);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new PostController();

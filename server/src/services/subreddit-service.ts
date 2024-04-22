@@ -40,7 +40,14 @@ class SubredditService {
         name: slug,
       },
       include: {
-        posts: true,
+        posts: {
+          include: {
+            author: true,
+            subreddit: true,
+            votes: true,
+            comments: true,
+          },
+        },
       },
     });
 
@@ -152,6 +159,18 @@ class SubredditService {
     }
 
     return isSubredditNameExists;
+  }
+
+  async checkSubscribedSubreddit(req: Request, subredditId: string) {
+    // check if user has already subscribed or not
+    const subscriptionExists = await db.subscription.findFirst({
+      where: {
+        subredditId,
+        userId: req.user?.id,
+      },
+    });
+
+    return subscriptionExists;
   }
 }
 

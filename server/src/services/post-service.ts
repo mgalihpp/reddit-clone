@@ -1,7 +1,10 @@
 import type { Request } from 'express';
 import { db } from '@/configs/db';
 import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/configs';
-import type { ExtendedPost, PostPayload } from '@/types/post';
+import type { CreatePostPayload, ExtendedPost, PostPayload } from '@/types/post';
+import subredditService from './subreddit-service';
+import HttpStatus from 'http-status-codes';
+import { HttpError } from '@/middlewares/error-handlers';
 
 class PostService {
   async getPosts(): Promise<ExtendedPost[]> {
@@ -108,6 +111,34 @@ class PostService {
     });
 
     return posts;
+  }
+
+  async createPost(req: Request, payload: CreatePostPayload) {
+    const { title, content, subredditId } = payload;
+
+    // verify user is subscribed to passed subreddit id
+    const subscription = await subredditService.checkSubscribedSubreddit(
+      req,
+      subredditId,
+    );
+
+    if (!subscription) {
+      throw new HttpError(
+        HttpStatus.CONFLICT,
+        'You must be subscribed to this subreddit to create posts!',
+      );
+    }
+
+    const post = await db.post.create({
+      data:{
+        title,
+        content,
+        authorId: req.user?.id as string,
+        subredditId
+      }
+    })
+
+    return post;
   }
 }
 

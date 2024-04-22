@@ -12,3 +12,9 @@ export type PostPayload = {
   limit?: string;
   page?: string;
 };
+
+export type CreatePostPayload = {
+  title: string,
+  content: any,
+  subredditId: string
+}

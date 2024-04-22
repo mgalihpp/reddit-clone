@@ -75,7 +75,7 @@ const Post: React.FC<PostProps> = ({
           to={`/r/${subredditName}/post/${post.id}`}
           className="w-fit flex items-center gap-2"
         >
-          <MessageSquare className="size-4" /> {commentAmt} name
+          <MessageSquare className="size-4" /> {commentAmt} comments
         </Link>
       </div>
     </div>

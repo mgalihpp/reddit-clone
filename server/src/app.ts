@@ -8,6 +8,8 @@ import userRouter from '@routes/user-routes';
 import postRouter from '@routes/post-routes';
 import subredditRouter from '@routes/subreddit-routes';
 import { errorHandler } from '@middlewares/error-handlers';
+import { createRouteHandler } from 'uploadthing/express';
+import { uploadRouter } from '@/utils/uploadthing';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -48,6 +50,15 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/subreddit', subredditRouter);
+app.use(
+  '/api/uploadthing',
+  createRouteHandler({
+    router: uploadRouter,
+    config: {
+      isDev: true,
+    },
+  }),
+);
 
 // Error handling middleware
 app.use(errorHandler);

@@ -22,7 +22,7 @@ function App() {
 
         {/* subreddit info */}
 
-        <div className="overflow-hidden h-fit rounded-lg border boder-gray-200 order-first md:col-end-4">
+        <div className="overflow-hidden h-fit rounded-lg border boder-gray-200 order-first md:order-last">
           <div className="bg-emerald-100 px-6 py-4">
             <p className="font-semibold py-3 flex items-center gap-1.5">
               <HomeIcon className="size-5" />
