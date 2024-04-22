@@ -9,6 +9,8 @@ import { format } from 'date-fns';
 import { useSession } from '@/providers/SessionProvider';
 import { buttonVariants } from '@/components/ui/button';
 import SubscribeBtn from '@/components/subscribe-btn';
+import MiniCreatePost from '@/components/post/mini-create-post';
+import PostFeed from '@/components/post/post-feed';
 
 const CommunitySlugPage = () => {
   const session = useSession();
@@ -35,35 +37,41 @@ const CommunitySlugPage = () => {
   });
 
   return isLoading ? (
-    <Loader />
+    <Loader container />
   ) : !data ? (
     <NotFound />
   ) : (
     <div>
       <FeedButton />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 md:gap-x-4 py-6">
-        <ul className="flex flex-col col-span-2 space-y-6">
+      <div className="grid grid-cols-1 gap-y-4 py-6 md:grid-cols-3 md:gap-x-4">
+        <ul className="col-span-2 flex flex-col space-y-6">
           {/* {children} */}
-          {/* <>
-            <h1 className="font-bold text-3xl md:text-4xl h-14">
+          <>
+            <h1 className="h-14 text-3xl font-bold md:text-4xl">
               r/{data.subreddit.name}
             </h1>
             <MiniCreatePost session={session} />
-            <PostFeed
-              initialPosts={data.subreddit.posts}
-              subredditName={data.subreddit.name}
-            />
-          </> */}
+            {isLoading ? (
+              <Loader />
+            ) : !data.subreddit.posts ? (
+              <NotFound />
+            ) : (
+              <PostFeed
+                initialPosts={data.subreddit.posts}
+                subredditName={data.subreddit.name}
+              />
+            )}
+          </>
           {/* {children} */}
         </ul>
 
         {/* info sidebar */}
-        <div className="overflow-hidden h-fit rounded-lg border border-gray-200 order-first md:order-last">
+        <div className="order-first h-fit overflow-hidden rounded-lg border border-gray-200 md:order-last">
           <div className="px-8 py-4">
-            <p className="font-semibold py-3">About r/{data.subreddit.name}</p>
+            <p className="py-3 font-semibold">About r/{data.subreddit.name}</p>
           </div>
-          <dl className="divide-y divide-gray-100 px-6 py-4 text-sm leading-6 bg-white">
+          <dl className="divide-y divide-gray-100 bg-white px-6 py-4 text-sm leading-6">
             <div className="flex justify-between gap-x-4 py-3">
               <dt className="text-gray-500">Created</dt>
               <dd className="text-gray-700">
@@ -99,7 +107,7 @@ const CommunitySlugPage = () => {
               to={`/r/${slug}/submit`}
               className={buttonVariants({
                 variant: 'outline',
-                className: 'w-full mb-6',
+                className: 'mb-6 w-full',
               })}
             >
               Create Post

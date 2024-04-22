@@ -17,7 +17,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryProvider>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <Suspense fallback={<Loader />}>
+          <Suspense fallback={<Loader container />}>
           <RouterProvider router={router} />
           </Suspense>
         </PersistGate>

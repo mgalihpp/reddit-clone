@@ -40,12 +40,7 @@ class SubredditService {
         name: slug,
       },
       include: {
-        posts: {
-          include: {
-            author: true,
-            votes: true,
-          },
-        },
+        posts: true,
       },
     });
 

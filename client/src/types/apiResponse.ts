@@ -21,7 +21,7 @@ export interface PostResponse extends ExtendedPost {}
 export type CreateSubredditResponse = string;
 
 interface SubredditWithPost extends Subreddit {
-  posts: Post[];
+  posts: ExtendedPost[];
 }
 
 export type SlugSubredditResponse = {
