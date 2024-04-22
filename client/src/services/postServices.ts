@@ -38,4 +38,12 @@ export const PostService = {
 
     return data;
   },
+
+  votePost: async (payload: { postId: string; voteType: VoteType }) => {
+    return await apiInstance.patch(
+      '/api/subreddit/post/vote',
+      payload,
+      token.authorization(),
+    );
+  },
 };

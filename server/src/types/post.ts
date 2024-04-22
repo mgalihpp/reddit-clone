@@ -1,4 +1,4 @@
-import { Comment, Post, Subreddit, User, Vote } from '@prisma/client';
+import { $Enums, Comment, Post, Subreddit, User, Vote } from '@prisma/client';
 
 export type ExtendedPost = Post & {
   subreddit: Subreddit;
@@ -14,7 +14,21 @@ export type PostPayload = {
 };
 
 export type CreatePostPayload = {
-  title: string,
-  content: any,
-  subredditId: string
+  title: string;
+  content: any;
+  subredditId: string;
+};
+
+export type VotePostPayload = {
+  postId: string;
+  voteType: $Enums.VoteType;
+};
+
+export type CachedPost = {
+  id: string
+  title: string
+  authorUsername: string
+  content: string
+  currentVote: Vote['type'] | null
+  createdAt: Date
 }

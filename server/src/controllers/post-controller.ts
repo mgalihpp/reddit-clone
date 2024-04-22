@@ -71,6 +71,30 @@ class PostController {
       next(error);
     }
   }
+
+  async votePost(req: Request, res: Response, next: NextFunction) {
+    const votePayload = req.body;
+
+    // Validate request body against defined validation rules
+    await Promise.all(
+      postValidators.votePostPayloadValidationRules.map((validation) =>
+        validation.run(req),
+      ),
+    );
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+    }
+    // If validation passes, proceed with post logic
+    try {
+      await postService.votePost(req, votePayload);
+
+      return res.status(HttpStatus.OK).json();
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new PostController();
