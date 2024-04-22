@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { z } from "zod";
-import { errorState, loadingState } from "@/reducers/authReducer";
+import { loadingState } from "@/reducers/authReducer";
 import { useAppDispatch, useAppSelector } from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/icons";
@@ -37,7 +37,6 @@ const registerFormSchema = z.object({
 const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   const dispacth = useAppDispatch();
   const isLoading = useAppSelector(loadingState);
-  const isError = useAppSelector(errorState);
   const [authAction, setAuthAction] = useState<string>("");
 
   const { pathname } = useLocation();
@@ -74,23 +73,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   }, [pathname, loginForm, registerForm]);
 
   const handleLogin = (input: z.infer<typeof loginFormSchema>) => {
-    console.log(input);
     dispacth(login(input)).then((value) => {
       if (value.meta.requestStatus === "fulfilled") {
         toast.success(`Login Success!`);
       } else if (value.meta.requestStatus === "rejected") {
-        toast.error(`${isError?.message}!`);
+        toast.error(`Invalid password or credentials!`);
       }
     });
   };
 
   const handleRegister = (input: z.infer<typeof registerFormSchema>) => {
-    console.log(input);
     dispacth(register(input)).then((value) => {
       if (value.meta.requestStatus === "fulfilled") {
         toast.success(`Register Success!`);
       } else if (value.meta.requestStatus === "rejected") {
-        toast.error(`${isError?.message}!`);
+        toast.error(`Invalid credentials!`);
       }
     });
   };
@@ -114,7 +111,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter email address" {...field} />
+                      <Input placeholder="Enter email address" {...field} autoComplete="email" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -131,6 +128,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                         placeholder="Enter password"
                         {...field}
                         type="password"
+                        autoComplete="current-password"
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
@@ -165,7 +163,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter name" {...field} />
+                      <Input placeholder="Enter name" {...field} autoComplete="name" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -178,7 +176,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter email address" {...field} />
+                      <Input placeholder="Enter email address" {...field} autoComplete="email" />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -195,6 +193,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                         placeholder="Enter password"
                         {...field}
                         type="password"
+                        autoComplete="current-password"
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />

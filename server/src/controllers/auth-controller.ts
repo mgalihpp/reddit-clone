@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
+import authService from '@/services/auth-service';
+import authValidators from '@validators/auth-validators';
 import { validationResult } from 'express-validator';
-import AuthService from '@services/auth-service';
-import AuthValidators from '@validators/auth-validators';
 import HttpStatus from 'http-status-codes';
 
 class AuthController {
@@ -10,7 +10,7 @@ class AuthController {
 
     // Validate request body against defined validation rules
     await Promise.all(
-      AuthValidators.loginValidationRules.map((validation) => validation.run(req)),
+      authValidators.loginValidationRules.map((validation) => validation.run(req)),
     );
 
     // Check for validation errors
@@ -23,7 +23,7 @@ class AuthController {
       const { email, password } = req.body;
 
       // Call the login method of AuthService
-      const { user, accessToken, sessionToken } = await AuthService.login(
+      const { user, accessToken, sessionToken } = await authService.login(
         email,
         password,
       );
@@ -47,7 +47,7 @@ class AuthController {
 
     // validate request body against defined validation rules
     await Promise.all(
-      AuthValidators.registerValidationRules.map((validation) => validation.run(req)),
+      authValidators.registerValidationRules.map((validation) => validation.run(req)),
     );
     // Check for validation errors
     const errors = validationResult(req);
@@ -58,7 +58,7 @@ class AuthController {
 
     try {
       // Call the register method of AuthService to create a new user
-      const { newUser, accessToken, sessionToken } = await AuthService.register(req.body);
+      const { newUser, accessToken, sessionToken } = await authService.register(req.body);
 
       // Create a new user object without the password field
       delete (newUser as any)?.password;

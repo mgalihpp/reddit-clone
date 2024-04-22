@@ -1,14 +1,24 @@
-import App from "@/App";
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react';
 import {
   Route,
   createBrowserRouter,
   createRoutesFromElements,
-} from "react-router-dom";
-import RootLayout from "./root-layout";
-import AuthLayout from "./auth-layout";
-import SignUp from "@/components/auth/sign-up";
-import SignIn from "@/components/auth/sign-in";
-import PrivateRoute from "./private-route";
+} from 'react-router-dom';
+import RootLayout from './root-layout';
+import AuthLayout from './auth-layout';
+import SignUp from '@/components/auth/sign-up';
+import SignIn from '@/components/auth/sign-in';
+import PrivateRoute from './private-route';
+import { SessionProvider } from '@/providers/SessionProvider';
+import NotFound from '@/not-found';
+import CreatePost from '@/pages/submit/create-post';
+
+const App = React.lazy(() => import('@/App'));
+const CreateCommunityPage = React.lazy(
+  () => import('@/pages/r/create/create-community'),
+);
+const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -18,12 +28,18 @@ export const router = createBrowserRouter(
       <Route
         path="/"
         element={
-          <PrivateRoute>
-            <RootLayout />
-          </PrivateRoute>
+          <SessionProvider>
+            <PrivateRoute>
+              <RootLayout />
+            </PrivateRoute>
+          </SessionProvider>
         }
       >
+        <Route path="/" element={<App />} />
         <Route path="/home" element={<App />} />
+        <Route path="/r/create" element={<CreateCommunityPage />} />
+        <Route path="/r/:slug" element={<CommunitySlugPage />} />
+        <Route path="/r/:slug/submit" element={<CreatePost />} />
       </Route>
       {/* PROTECTED ROUTES */}
 
@@ -33,7 +49,9 @@ export const router = createBrowserRouter(
         <Route path="sign-in" element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
       {/* PUBLIC ROUTES */}
-    </>
-  )
+    </>,
+  ),
 );

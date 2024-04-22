@@ -1,3 +1,5 @@
+import { ExtendedPost } from './post';
+
 export type LoginResponse = {
   message: string;
   user: User;
@@ -12,4 +14,18 @@ export type RegisterResponse = {
   token: string;
   sessionToken: string;
   error?: string;
+};
+
+export interface PostResponse extends ExtendedPost {}
+
+export type CreateSubredditResponse = string;
+
+interface SubredditWithPost extends Subreddit {
+  posts: ExtendedPost[];
+}
+
+export type SlugSubredditResponse = {
+  subreddit: SubredditWithPost;
+  isSubcribed: boolean;
+  memberCount: number;
 };

@@ -1,8 +1,16 @@
 import type { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { HttpError } from './error-handlers';
-import UserService from '@/services/user-service';
+import userService from '@/services/user-service';
 
+/**
+ * Middleware function to authenticate a token.
+ *
+ * @param {Request} req - The request object.
+ * @param {Response} res - The response object.
+ * @param {NextFunction} next - The next function to be called.
+ * @return {Promise<void>} - Returns a promise that resolves to void.
+ */
 export const authenticatedToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -12,7 +20,7 @@ export const authenticatedToken = async (req: Request, res: Response, next: Next
   }
 
   try {
-    const user = await UserService.verifyTokenAndGetUser(token);
+    const user = await userService.verifyTokenAndGetUser(token);
     req.user = user;
     next();
   } catch (error) {
