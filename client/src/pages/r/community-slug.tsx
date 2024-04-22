@@ -25,7 +25,7 @@ const CommunitySlugPage = () => {
     }
   }, [pathname, navigate]);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['slug-subreddit', slug],
     queryFn: async () => {
       const data = await SubredditService.getSlugSubreddit(slug as string);
@@ -91,6 +91,7 @@ const CommunitySlugPage = () => {
                 isSubscribed={data.isSubcribed}
                 subredditId={data.subreddit.id}
                 subredditName={data.subreddit.name}
+                refetch={refetch}
               />
             ) : null}
 

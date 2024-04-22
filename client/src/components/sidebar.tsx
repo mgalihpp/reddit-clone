@@ -1,4 +1,5 @@
-import { Home } from "lucide-react";
+import { Home } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -7,8 +8,10 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
   return (
     <div
-      className={`flex fixed h-screen flex-col justify-between border-e min-w-52 xl:min-w-[270px] bg-white transform transition-all duration-300 delay-100 ease-in-out ${
-        sidebarOpen ? "translate-x-0" : "w-[-1px] -translate-x-full"
+      className={`flex fixed h-screen flex-col justify-between border-e max-w-52 xl:min-w-[270px] bg-white transform transition-all duration-300 delay-100 ease-in-out ${
+        sidebarOpen
+          ? 'translate-x-0 fade-in-5'
+          : 'w-[-1px] -translate-x-full fade-out-0 opacity-0'
       }`}
     >
       <nav className="px-4 py-6">
@@ -18,13 +21,13 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
         <ul className="mt-6 space-y-1">
           <li>
-            <a
-              href="/home"
+            <Link
+              to="/home"
               className="flex flex-grow gap-2 items-center rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
             >
               <Home className="size-4 sm:size-6 " />
               Home
-            </a>
+            </Link>
           </li>
 
           <li>
@@ -50,12 +53,12 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
               <ul className="mt-2 space-y-1 px-4">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="#"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                   >
                     Banned Users
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
@@ -71,21 +74,21 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
           </li>
 
           <li>
-            <a
-              href="#"
+            <Link
+              to="#"
               className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             >
               Billing
-            </a>
+            </Link>
           </li>
 
           <li>
-            <a
-              href="#"
+            <Link
+              to="#"
               className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
             >
               Invoices
-            </a>
+            </Link>
           </li>
 
           <li>
@@ -111,21 +114,21 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
               <ul className="mt-2 space-y-1 px-4">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="#"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                   >
                     Details
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="#"
                     className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                   >
                     Security
-                  </a>
+                  </Link>
                 </li>
 
                 <li>
@@ -145,8 +148,8 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
       </nav>
 
       <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
-        <a
-          href="#"
+        <Link
+          to="#"
           className="flex items-center gap-2 bg-white p-4 hover:bg-gray-50"
         >
           <img
@@ -162,7 +165,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
               <span> eric@frusciante.com </span>
             </p>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );

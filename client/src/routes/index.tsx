@@ -1,4 +1,5 @@
-import App from '@/App';
+/* eslint-disable react-refresh/only-export-components */
+import React from 'react';
 import {
   Route,
   createBrowserRouter,
@@ -10,9 +11,11 @@ import SignUp from '@/components/auth/sign-up';
 import SignIn from '@/components/auth/sign-in';
 import PrivateRoute from './private-route';
 import { SessionProvider } from '@/providers/SessionProvider';
-import CreateCommunityPage from '@/pages/r/create/create-community';
-import CommunitySlugPage from '@/pages/r/community-slug';
 import NotFound from '@/not-found';
+
+const App = React.lazy(() => import('@/App'));
+const CreateCommunityPage = React.lazy(() => import('@/pages/r/create/create-community'),);
+const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
 
 export const router = createBrowserRouter(
   createRoutesFromElements(

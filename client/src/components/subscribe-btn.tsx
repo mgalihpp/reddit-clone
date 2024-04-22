@@ -8,12 +8,14 @@ interface SubscribeBtnProps {
   isSubscribed: boolean;
   subredditId: string;
   subredditName: string;
+  refetch: () => void;
 }
 
 const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
   isSubscribed,
   subredditId,
   subredditName,
+  refetch,
 }) => {
   const { mutate: subscribe, isPending: isSubLoading } = useMutation({
     mutationKey: ['subscribe'],
@@ -26,7 +28,7 @@ const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
     },
     onSuccess: () => {
       startTransition(() => {
-        window.location.reload();
+        refetch();
       });
       toast.success(`Subscribed! to r/${subredditName}`);
     },
@@ -42,7 +44,7 @@ const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
     },
     onSuccess: () => {
       startTransition(() => {
-        window.location.reload();
+        refetch();
       });
       toast.success(`Unsubscribed! to r/${subredditName}`);
     },
