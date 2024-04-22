@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { HttpError } from './error-handlers';
-import UserService from '@/services/user-service';
+import userService from '@/services/user-service';
 
 export const authenticatedToken = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers['authorization'];
@@ -12,7 +12,7 @@ export const authenticatedToken = async (req: Request, res: Response, next: Next
   }
 
   try {
-    const user = await UserService.verifyTokenAndGetUser(token);
+    const user = await userService.verifyTokenAndGetUser(token);
     req.user = user;
     next();
   } catch (error) {
