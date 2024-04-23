@@ -26,7 +26,7 @@ const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
     second: '2-digit',
     hour12: false,
   });
-  console.log(`${currentDate} - ${req.method} ${req.url}`);
+  console.log(`${currentDate} - ${req.method} ${req.url} - ${res.statusCode}`);
   next();
 };
 

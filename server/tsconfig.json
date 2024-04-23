@@ -45,5 +45,6 @@
         "transpileOnly": true,
         "files": true,
         "pretty": true
-    }
+    },
+    "exclude": ["__test__", "node_modules"]
 }
