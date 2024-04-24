@@ -6,6 +6,8 @@ import type {
   CreatePostPayload,
   ExtendedPost,
   PostPayload,
+  PostPayloadById,
+  PostVoteAuthor,
   VotePostPayload,
 } from '@/types/post';
 import subredditService from './subreddit-service';
@@ -118,6 +120,30 @@ class PostService {
     });
 
     return posts;
+  }
+
+  async getPostById(payload: PostPayloadById) {
+    const cachedPost = (await redis.hgetall(`post:${payload.postId}`)) as CachedPost;
+
+    let post: PostVoteAuthor | null = null;
+
+    if (!cachedPost) {
+      post = await db.post.findUnique({
+        where: {
+          id: payload.postId,
+        },
+        include: {
+          votes: true,
+          author: true,
+        },
+      });
+    }
+
+    if (!post && !cachedPost) {
+      throw new HttpError(HttpStatus.NOT_FOUND, 'Post not found');
+    }
+
+    return { post, cachedPost };
   }
 
   async createPost(req: Request, payload: CreatePostPayload) {

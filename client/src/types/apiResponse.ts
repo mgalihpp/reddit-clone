@@ -1,4 +1,4 @@
-import { ExtendedPost } from './post';
+import type { CachedPost, ExtendedPost } from './post';
 
 export type LoginResponse = {
   message: string;
@@ -17,6 +17,11 @@ export type RegisterResponse = {
 };
 
 export interface PostResponse extends ExtendedPost {}
+
+export interface PostByIdResponse {
+  post: Omit<ExtendedPost, 'comments' | 'subreddit'>;
+  cachedPost: CachedPost;
+}
 
 export type CreateSubredditResponse = string;
 

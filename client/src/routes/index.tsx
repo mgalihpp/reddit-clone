@@ -5,20 +5,21 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
 } from 'react-router-dom';
-import RootLayout from './root-layout';
-import AuthLayout from './auth-layout';
+import RootLayout from '@/layout/root-layout';
+import AuthLayout from '@/layout/auth-layout';
 import SignUp from '@/components/auth/sign-up';
 import SignIn from '@/components/auth/sign-in';
-import PrivateRoute from './private-route';
 import { SessionProvider } from '@/providers/SessionProvider';
 import NotFound from '@/not-found';
-import CreatePost from '@/pages/submit/create-post';
+import CreatePost from '@/pages/r/submit/create-post';
 
 const App = React.lazy(() => import('@/App'));
+const PrivateRoute = React.lazy(() => import('@/routes/private-route'));
 const CreateCommunityPage = React.lazy(
   () => import('@/pages/r/create/create-community'),
 );
 const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
+const SinglePost = React.lazy(() => import('@/pages/r/post/single-post'));
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,6 +41,7 @@ export const router = createBrowserRouter(
         <Route path="/r/create" element={<CreateCommunityPage />} />
         <Route path="/r/:slug" element={<CommunitySlugPage />} />
         <Route path="/r/:slug/submit" element={<CreatePost />} />
+        <Route path="/r/:slug/post/:id" element={<SinglePost />} />
       </Route>
       {/* PROTECTED ROUTES */}
 

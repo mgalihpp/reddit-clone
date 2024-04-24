@@ -1,5 +1,5 @@
 import { apiInstance } from '@/lib/axios';
-import type { PostResponse } from '@/types/apiResponse';
+import type { PostByIdResponse, PostResponse } from '@/types/apiResponse';
 import token from '@/utils/token';
 
 export const PostService = {
@@ -10,7 +10,7 @@ export const PostService = {
   },
   getInfinityPosts: async (limit: number, page: number) => {
     const { data } = await apiInstance.get<PostResponse[]>(
-      `/api/posts?limit=${limit}&page=${page}`,
+      `/api/posts/criteria?limit=${limit}&page=${page}`,
     );
 
     return data;
@@ -20,6 +20,14 @@ export const PostService = {
     const { data } = await apiInstance.get<PostResponse[]>(
       '/api/posts/followed',
       token.authorization(),
+    );
+
+    return data;
+  },
+
+  getPostById: async (postId: string) => {
+    const { data } = await apiInstance.get<PostByIdResponse>(
+      `/api/posts/${postId}`,
     );
 
     return data;

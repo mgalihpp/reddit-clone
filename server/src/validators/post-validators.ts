@@ -1,9 +1,10 @@
-import { check, ValidationChain } from 'express-validator';
+import { check, param, ValidationChain } from 'express-validator';
 
 class PostValidator {
   postPayloadValidationRules: ValidationChain[];
   createPostPayloadValidationRules: ValidationChain[];
   votePostPayloadValidationRules: ValidationChain[];
+  postIdValidationRules: ValidationChain[];
 
   constructor() {
     this.postPayloadValidationRules = [
@@ -16,10 +17,11 @@ class PostValidator {
       check('content').notEmpty(),
       check('subredditId').isString(),
     ];
-    this.votePostPayloadValidationRules =[
+    this.votePostPayloadValidationRules = [
       check('postId').isString(),
       check('voteType').isIn(['UP', 'DOWN']),
-    ]
+    ];
+    this.postIdValidationRules = [param('postId').isString()];
   }
 }
 
