@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from 'express';
 import HttpStatus from 'http-status-codes';
 import { HttpError } from './error-handlers';
-import userService from '@/services/user-service';
+import userService from '@services/user-service';
 
 /**
  * Middleware function to authenticate a token.

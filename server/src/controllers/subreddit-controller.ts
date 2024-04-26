@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import subredditValidators from '@/validators/subreddit-validators';
+import subredditValidators from '@validators/subreddit-validators';
 import HttpStatus from 'http-status-codes';
-import subredditService from '@/services/subreddit-service';
+import subredditService from '@services/subreddit-service';
 import type { subredditPayload } from '@/types/subreddit';
 
 class SubredditController {

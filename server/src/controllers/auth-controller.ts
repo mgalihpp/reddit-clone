@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import authService from '@/services/auth-service';
+import authService from '@services/auth-service';
 import authValidators from '@validators/auth-validators';
 import { validationResult } from 'express-validator';
 import HttpStatus from 'http-status-codes';

@@ -1,11 +1,11 @@
 import type { NextFunction, Request, Response } from 'express';
-import postService from '@/services/post-service';
-import postValidators from '@/validators/post-validators';
+import postService from '@services/post-service';
+import postValidators from '@validators/post-validators';
 import { validationResult } from 'express-validator';
-import { HttpError } from '@/middlewares/error-handlers';
+import { HttpError } from '@middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
 import type { PostPayloadById } from '@/types/post';
-import commentService from '@/services/comment-service';
+import commentService from '@services/comment-service';
 
 class PostController {
   async getPost(req: Request, res: Response, next: NextFunction) {

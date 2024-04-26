@@ -1,6 +1,7 @@
 import { db } from '@/configs/db';
 import type { CommentPayload, commentVotePayload } from '@/types/comment';
 import type { PostPayloadById } from '@/types/post';
+import { exclude } from '@/utils';
 import type { Request } from 'express';
 
 class CommentService {
@@ -23,7 +24,13 @@ class CommentService {
       },
     });
 
-    return comments;
+    const commentsAuthorWithoutPassword = comments.map((comment) => {
+      exclude(comment.author, ['email', 'password']);
+
+      return comment;
+    });
+
+    return commentsAuthorWithoutPassword;
   }
 
   async createComment(req: Request, payload: CommentPayload) {
