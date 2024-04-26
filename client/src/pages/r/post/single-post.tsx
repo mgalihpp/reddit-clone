@@ -44,7 +44,7 @@ const SinglePost = () => {
         <div className="w-full flex-1 rounded-sm bg-white p-4 sm:w-0">
           <p className="mt-1 max-h-40 truncate text-xs text-gray-500">
             Posted by u/
-            {data.post?.author.username ?? data.cachedPost?.authorUsername}
+            {data.post?.author.username ?? data.cachedPost?.authorUsername}{" "}
             {formatTimeToNow(
               new Date(data.post?.createdAt ?? data.cachedPost?.createdAt),
             )}

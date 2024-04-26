@@ -49,7 +49,7 @@ const Post: React.FC<PostProps> = ({
                 <span className="px-1">•</span>
               </>
             ) : null}
-            <span>Posted by u/{post.author.username}</span>
+            <span>Posted by u/{post.author.username}</span>{" "}
             {formatTimeToNow(new Date(post.createdAt))}
           </div>
           <Link to={`/r/${subredditName}/post/${post.id}`}>

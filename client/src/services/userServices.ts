@@ -1,8 +1,9 @@
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { apiInstance } from "@/lib/axios";
-import { getCurrentUser, resetState } from "@/reducers/authReducer";
-import token from "@/utils/token";
-import { useQuery } from "@tanstack/react-query";
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { apiInstance } from '@/lib/axios';
+import { getCurrentUser, resetState } from '@/reducers/authReducer';
+import type { updateUserPayload } from '@/types/user';
+import token from '@/utils/token';
+import { useQuery } from '@tanstack/react-query';
 
 export const UserService = {
   fetchUsers: async () => {
@@ -10,7 +11,7 @@ export const UserService = {
   },
 
   getSession: (): Session => {
-    const persistedStateString = sessionStorage.getItem("persist:user");
+    const persistedStateString = sessionStorage.getItem('persist:user');
     const session = (
       persistedStateString ? JSON.parse(persistedStateString) : null
     ) as Session;
@@ -26,11 +27,11 @@ export const UserService = {
       isLoading,
       isFetching,
     } = useQuery({
-      queryKey: ["user-session"],
+      queryKey: ['user-session'],
       queryFn: async () => {
         const { data } = await apiInstance.get<User>(
-          "/api/users",
-          token.authorization()
+          '/api/users',
+          token.authorization(),
         );
 
         return data;
@@ -50,5 +51,22 @@ export const UserService = {
   useAuth: (): User | null => {
     const user = useAppSelector(getCurrentUser);
     return user;
+  },
+
+  // U for fix rules of hooks
+  updateUser: async (payload: updateUserPayload) => {
+    // Implement updating user logic here
+    // const dispatch = useAppDispatch();
+
+    // dispatch(updateUser(payload));
+
+    const { data } = await apiInstance.put<{ user: User; token: string }>(
+      '/api/users',
+      payload,
+      token.authorization(),
+    );
+
+    // persistor.persist();
+    return data;
   },
 };

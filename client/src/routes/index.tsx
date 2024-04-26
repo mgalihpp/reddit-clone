@@ -20,6 +20,7 @@ const CreateCommunityPage = React.lazy(
 );
 const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
 const SinglePost = React.lazy(() => import('@/pages/r/post/single-post'));
+const UserSettings = React.lazy(() => import('@/pages/settings/user-settings'));
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -38,6 +39,7 @@ export const router = createBrowserRouter(
       >
         <Route path="/" element={<App />} />
         <Route path="/home" element={<App />} />
+        <Route path="/settings" element={<UserSettings />} />
         <Route path="/r/create" element={<CreateCommunityPage />} />
         <Route path="/r/:slug" element={<CommunitySlugPage />} />
         <Route path="/r/:slug/submit" element={<CreatePost />} />

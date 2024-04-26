@@ -17,7 +17,7 @@ class JwtToken {
   }
 
   generateRefreshToken(payload: any): string {
-    return jwt.sign(payload, this.refreshTokenSecret);
+    return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '1h' });
   }
 
   public generateSessionToken(length: number): string {
@@ -31,4 +31,4 @@ class JwtToken {
   }
 }
 
-export default new JwtToken(process.env.JWT_SECRET!, process.env.JWT_REFRESH!);
+export default new JwtToken(process.env.JWT_SECRET!, process.env.JWT_SECRET!);
