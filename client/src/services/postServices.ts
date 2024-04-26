@@ -1,4 +1,6 @@
 import { apiInstance } from '@/lib/axios';
+import type { CommentRequest } from '@/lib/validators/comment';
+import { CommentVoteRequest } from '@/lib/validators/vote';
 import type { PostByIdResponse, PostResponse } from '@/types/apiResponse';
 import token from '@/utils/token';
 
@@ -47,9 +49,27 @@ export const PostService = {
     return data;
   },
 
+  createComment: async (payload: CommentRequest) => {
+    const { data } = await apiInstance.patch(
+      '/api/posts/comment',
+      payload,
+      token.authorization(),
+    );
+
+    return data;
+  },
+
   votePost: async (payload: { postId: string; voteType: VoteType }) => {
     return await apiInstance.patch(
       '/api/subreddit/post/vote',
+      payload,
+      token.authorization(),
+    );
+  },
+
+  voteComment: async (payload: CommentVoteRequest) => {
+    return await apiInstance.patch(
+      '/api/subreddit/post/comment/vote',
       payload,
       token.authorization(),
     );

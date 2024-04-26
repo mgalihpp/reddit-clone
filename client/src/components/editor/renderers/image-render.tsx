@@ -6,8 +6,9 @@ function CustomImageRenderer({ data }: any) {
       <img
         alt="image"
         className="object-contain"
-        width="100%"
-        height="100%"
+        width="500px"
+        height="500px"
+        loading="lazy"
         src={src}
       />
     </div>

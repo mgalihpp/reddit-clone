@@ -5,6 +5,7 @@ import { validationResult } from 'express-validator';
 import { HttpError } from '@/middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
 import type { PostPayloadById } from '@/types/post';
+import commentService from '@/services/comment-service';
 
 class PostController {
   async getPost(req: Request, res: Response, next: NextFunction) {
@@ -64,8 +65,9 @@ class PostController {
     // If validation passes, proceed with post logic
     try {
       const { post, cachedPost } = await postService.getPostById(params);
+      const comments = await commentService.getCommentsByPostId(params);
 
-      return res.status(HttpStatus.OK).json({ post, cachedPost });
+      return res.status(HttpStatus.OK).json({ post, cachedPost, comments });
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,6 @@
 import EditorOutput from '@/components/editor/EditorOutput';
 import Loader from '@/components/loader';
+import CommentSection from '@/components/post/comment-section';
 import { formatTimeToNow } from '@/lib/utils';
 import NotFound from '@/not-found';
 import { PostService } from '@/services/postServices';
@@ -21,7 +22,7 @@ const SinglePost = () => {
     }
   }, [pathname, id, navigate]);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['postId', id],
     queryFn: async () => {
       const data = await PostService.getPostById(id as string);
@@ -54,6 +55,12 @@ const SinglePost = () => {
 
           <EditorOutput
             content={data.post?.content ?? data.cachedPost?.content}
+          />
+
+          <CommentSection
+            postId={data.post?.id ?? data.cachedPost?.id}
+            comments={data.comments}
+            refetch={refetch}
           />
         </div>
       )}
