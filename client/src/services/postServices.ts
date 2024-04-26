@@ -1,5 +1,7 @@
 import { apiInstance } from '@/lib/axios';
-import type { PostResponse } from '@/types/apiResponse';
+import type { CommentRequest } from '@/lib/validators/comment';
+import { CommentVoteRequest } from '@/lib/validators/vote';
+import type { PostByIdResponse, PostResponse } from '@/types/apiResponse';
 import token from '@/utils/token';
 
 export const PostService = {
@@ -10,7 +12,7 @@ export const PostService = {
   },
   getInfinityPosts: async (limit: number, page: number) => {
     const { data } = await apiInstance.get<PostResponse[]>(
-      `/api/posts?limit=${limit}&page=${page}`,
+      `/api/posts/criteria?limit=${limit}&page=${page}`,
     );
 
     return data;
@@ -20,6 +22,14 @@ export const PostService = {
     const { data } = await apiInstance.get<PostResponse[]>(
       '/api/posts/followed',
       token.authorization(),
+    );
+
+    return data;
+  },
+
+  getPostById: async (postId: string) => {
+    const { data } = await apiInstance.get<PostByIdResponse>(
+      `/api/posts/${postId}`,
     );
 
     return data;
@@ -39,9 +49,27 @@ export const PostService = {
     return data;
   },
 
+  createComment: async (payload: CommentRequest) => {
+    const { data } = await apiInstance.patch(
+      '/api/posts/comment',
+      payload,
+      token.authorization(),
+    );
+
+    return data;
+  },
+
   votePost: async (payload: { postId: string; voteType: VoteType }) => {
     return await apiInstance.patch(
       '/api/subreddit/post/vote',
+      payload,
+      token.authorization(),
+    );
+  },
+
+  voteComment: async (payload: CommentVoteRequest) => {
+    return await apiInstance.patch(
+      '/api/subreddit/post/comment/vote',
       payload,
       token.authorization(),
     );

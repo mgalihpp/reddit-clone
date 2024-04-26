@@ -35,7 +35,7 @@ const CreatePost = () => {
   ) : !data ? (
     <NotFound />
   ) : (
-    <div className="flex flex-col items-start gap-6">
+    <div className="flex flex-col items-start gap-6 my-2">
       {/* heading */}
       <div className="border-b border-gray-200 pb-5">
         <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">

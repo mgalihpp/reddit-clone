@@ -7,10 +7,19 @@ export type ExtendedPost = Post & {
   comments: Comment[];
 };
 
+export type PostVoteAuthor = Post & {
+  votes: Vote[];
+  author: User;
+};
+
 export type PostPayload = {
   subredditName?: string;
   limit?: string;
   page?: string;
+};
+
+export type PostPayloadById = {
+  postId: string;
 };
 
 export type CreatePostPayload = {
@@ -25,10 +34,10 @@ export type VotePostPayload = {
 };
 
 export type CachedPost = {
-  id: string
-  title: string
-  authorUsername: string
-  content: string
-  currentVote: Vote['type'] | null
-  createdAt: Date
-}
+  id: string;
+  title: string;
+  authorUsername: string;
+  content: string;
+  currentVote: Vote['type'] | null;
+  createdAt: Date;
+};

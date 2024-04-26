@@ -8,7 +8,7 @@ type User = {
   password: string | null;
 };
 
-type newUser = Omit<User, "id" | "username" | "image" | "emailVerified">;
+type newUser = Omit<User, 'id' | 'username' | 'image' | 'emailVerified'>;
 
 type Session = {
   token: string;
@@ -35,7 +35,7 @@ type Subreddit = {
   updatedAt: Date;
 };
 
-type VoteType = "UP" | "DOWN";
+type VoteType = 'UP' | 'DOWN';
 
 type Vote = {
   userId: string;
@@ -43,7 +43,7 @@ type Vote = {
   type: VoteType;
 };
 
-type Comment = {
+type Comments = {
   id: string;
   authorId: string;
   postId: string;
@@ -53,11 +53,17 @@ type Comment = {
   commentId: string | null;
 };
 
-declare module "@editorjs/embed"
-declare module "@editorjs/table"
-declare module "@editorjs/list"
-declare module "@editorjs/code"
-declare module "@editorjs/link"
-declare module "@editorjs/inline-code"
-declare module "@editorjs/image"
-declare module "@weekwood/editorjs-video"
+type CommentVote = {
+  userId: string;
+  commentId: string;
+  type: VoteType;
+};
+
+declare module '@editorjs/embed';
+declare module '@editorjs/table';
+declare module '@editorjs/list';
+declare module '@editorjs/code';
+declare module '@editorjs/link';
+declare module '@editorjs/inline-code';
+declare module '@editorjs/image';
+declare module '@weekwood/editorjs-video';

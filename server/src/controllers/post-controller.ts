@@ -4,6 +4,8 @@ import postValidators from '@/validators/post-validators';
 import { validationResult } from 'express-validator';
 import { HttpError } from '@/middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
+import type { PostPayloadById } from '@/types/post';
+import commentService from '@/services/comment-service';
 
 class PostController {
   async getPost(req: Request, res: Response, next: NextFunction) {
@@ -44,6 +46,30 @@ class PostController {
       return res.status(HttpStatus.OK).json(posts);
     } catch (error) {
       next(new HttpError(HttpStatus.BAD_REQUEST, 'Failed to get post'));
+    }
+  }
+
+  async getPostById(req: Request, res: Response, next: NextFunction) {
+    const params = req.params as PostPayloadById;
+
+    // Validate request body against defined validation rules
+    await Promise.all(
+      postValidators.postIdValidationRules.map((validation) => validation.run(req)),
+    );
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+    }
+    // If validation passes, proceed with post logic
+    try {
+      const { post, cachedPost } = await postService.getPostById(params);
+      const comments = await commentService.getCommentsByPostId(params);
+
+      return res.status(HttpStatus.OK).json({ post, cachedPost, comments });
+    } catch (error) {
+      next(error);
     }
   }
 
