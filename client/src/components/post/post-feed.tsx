@@ -1,11 +1,11 @@
-import { ExtendedPost } from "@/types/post";
-import React, { useEffect, useRef } from "react";
-import { useIntersection } from "@mantine/hooks";
-import { useSession } from "@/providers/SessionProvider";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import Post from "./post";
-import { Loader2 } from "lucide-react";
-import { PostService } from "@/services/postServices";
+import { ExtendedPost } from '@/types/post';
+import React, { useEffect, useRef } from 'react';
+import { useIntersection } from '@mantine/hooks';
+import { useSession } from '@/providers/SessionProvider';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import Post from './post';
+import { Loader2 } from 'lucide-react';
+import { PostService } from '@/services/postServices';
 
 interface PostFeedProps {
   initialPosts: ExtendedPost[];
@@ -26,9 +26,13 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   const session = useSession();
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ["infinite-query"],
+    queryKey: ['infinite-query'],
     queryFn: async ({ pageParam }) => {
-      const data = await PostService.getInfinityPosts(INFINITE_SCROLL_PAGINATION_RESULTS, pageParam)
+      const data = await PostService.getInfinityPosts(
+        INFINITE_SCROLL_PAGINATION_RESULTS,
+        pageParam,
+        subredditName,
+      );
 
       return data;
     },
@@ -37,6 +41,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
       return pages.length + 1;
     },
     initialData: { pages: [initialPosts], pageParams: [1] },
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -48,16 +53,16 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   const posts = data.pages.flatMap((page) => page) ?? initialPosts;
 
   return (
-    <ul className="flex flex-col col-span-2 space-y-6">
+    <ul className="col-span-2 flex flex-col space-y-6">
       {posts.map((post, index) => {
         const votesAmt = post.votes.reduce((acc, vote) => {
-          if (vote.type === "UP") return acc + 1;
-          if (vote.type === "DOWN") return acc - 1;
+          if (vote.type === 'UP') return acc + 1;
+          if (vote.type === 'DOWN') return acc - 1;
           return acc;
         }, 0);
 
         const currentVote = post.votes.find(
-          (vote) => vote.userId === session?.id
+          (vote) => vote.userId === session?.id,
         );
 
         if (index === posts.length - 1) {
@@ -88,7 +93,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
 
       {isFetchingNextPage && (
         <li className="flex justify-center">
-          <Loader2 className="size-6 text-zinc-500 animate-spin" />
+          <Loader2 className="size-6 animate-spin text-zinc-500" />
         </li>
       )}
     </ul>

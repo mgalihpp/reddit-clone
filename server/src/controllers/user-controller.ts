@@ -1,5 +1,5 @@
-import userService from '@/services/user-service';
-import userValidators from '@/validators/user-validators';
+import userService from '@services/user-service';
+import userValidators from '@validators/user-validators';
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import HttpStatus from 'http-status-codes';
@@ -7,6 +7,9 @@ import HttpStatus from 'http-status-codes';
 class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
     try {
+      // Create a new user object without the password field
+      delete (req.user as any)?.password;
+
       return res.status(HttpStatus.OK).json(req.user);
     } catch (error) {
       next(error);

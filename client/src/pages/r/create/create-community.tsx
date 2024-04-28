@@ -36,7 +36,7 @@ const CreateCommunityPage = () => {
   });
 
   return (
-    <div className="flex items-center h-full max-w-3xl mx-auto">
+    <div className="flex items-center h-full mx-auto">
       <div className="relative bg-white w-full h-fit rounded-lg p-4 space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-xl font-semibold">Create a Community</h1>

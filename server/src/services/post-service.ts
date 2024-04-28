@@ -10,10 +10,11 @@ import type {
   PostVoteAuthor,
   VotePostPayload,
 } from '@/types/post';
-import subredditService from './subreddit-service';
+import subredditService from '@services/subreddit-service';
 import HttpStatus from 'http-status-codes';
 import { HttpError } from '@/middlewares/error-handlers';
 import { redis } from '@/configs/redis';
+import { exclude } from '@/utils';
 
 class PostService {
   async getPosts(): Promise<ExtendedPost[]> {
@@ -32,7 +33,13 @@ class PostService {
       take: INFINITE_SCROLL_PAGINATION_RESULTS,
     });
 
-    return posts;
+    const postsAuthorWithoutPassword = posts.map((post) => {
+      exclude(post.author, ['email', 'password']);
+
+      return post;
+    });
+
+    return postsAuthorWithoutPassword;
   }
 
   async getPostsByFollowedCommunity(req: Request): Promise<ExtendedPost[]> {
@@ -67,7 +74,13 @@ class PostService {
       take: INFINITE_SCROLL_PAGINATION_RESULTS,
     });
 
-    return posts;
+    const postsAuthorWithoutPassword = posts.map((post) => {
+      exclude(post.author, ['email', 'password']);
+
+      return post;
+    });
+
+    return postsAuthorWithoutPassword;
   }
   async getPostsByCriteria(req: Request, payload: PostPayload): Promise<ExtendedPost[]> {
     let followedCommunitiesIds: string[] = [];
@@ -119,7 +132,13 @@ class PostService {
       where: whereClause,
     });
 
-    return posts;
+    const postsAuthorWithoutPassword = posts.map((post) => {
+      exclude(post.author, ['email', 'password']);
+
+      return post;
+    });
+
+    return postsAuthorWithoutPassword;
   }
 
   async getPostById(payload: PostPayloadById) {
@@ -141,6 +160,19 @@ class PostService {
 
     if (!post && !cachedPost) {
       throw new HttpError(HttpStatus.NOT_FOUND, 'Post not found');
+    }
+
+    if (post) {
+      const AuthorWithoutPassword = exclude(post?.author, [
+        'email',
+        'password',
+      ] as never[]);
+
+      const postAuthourWIthoutPassword = {
+        ...post,
+        author: AuthorWithoutPassword,
+      };
+      return { postAuthourWIthoutPassword, cachedPost };
     }
 
     return { post, cachedPost };

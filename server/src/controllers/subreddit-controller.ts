@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import subredditValidators from '@/validators/subreddit-validators';
+import subredditValidators from '@validators/subreddit-validators';
 import HttpStatus from 'http-status-codes';
-import subredditService from '@/services/subreddit-service';
+import subredditService from '@services/subreddit-service';
 import type { subredditPayload } from '@/types/subreddit';
 
 class SubredditController {
@@ -25,6 +25,16 @@ class SubredditController {
       const subredditName = await subredditService.createSubreddit(req, subredditPayload);
 
       return res.status(HttpStatus.OK).json(subredditName);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllSubreddits(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subreddits = await subredditService.getAllSubreddit();
+
+      return res.status(HttpStatus.OK).json(subreddits);
     } catch (error) {
       next(error);
     }

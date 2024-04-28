@@ -1,6 +1,7 @@
 import EditorOutput from '@/components/editor/EditorOutput';
 import Loader from '@/components/loader';
 import CommentSection from '@/components/post/comment-section';
+import FeedButton from '@/components/post/feed-btn';
 import { formatTimeToNow } from '@/lib/utils';
 import NotFound from '@/not-found';
 import { PostService } from '@/services/postServices';
@@ -29,22 +30,21 @@ const SinglePost = () => {
 
       return data;
     },
+    refetchOnWindowFocus: false,
   });
 
   return isLoading ? (
     <Loader container />
+  ) : !data?.post && !data?.cachedPost ? (
+    <NotFound />
   ) : (
-    <div className="flex h-full flex-col items-center justify-between sm:flex-row sm:items-start">
-      {/* POST VOTE */}
-      {/* POST VOTE */}
-
-      {!data?.cachedPost && !data?.post ? (
-        <NotFound />
-      ) : (
+    <div>
+      <FeedButton />
+      <div className="flex h-full flex-col items-center justify-between sm:flex-row sm:items-start">
         <div className="w-full flex-1 rounded-sm bg-white p-4 sm:w-0">
           <p className="mt-1 max-h-40 truncate text-xs text-gray-500">
             Posted by u/
-            {data.post?.author.username ?? data.cachedPost?.authorUsername}{" "}
+            {data.post?.author.username ?? data.cachedPost?.authorUsername}{' '}
             {formatTimeToNow(
               new Date(data.post?.createdAt ?? data.cachedPost?.createdAt),
             )}
@@ -63,7 +63,7 @@ const SinglePost = () => {
             refetch={refetch}
           />
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -70,9 +70,13 @@ class AuthService {
       const hashedPassword = await bcrypt.hash(userData.password, 10);
       const validName = userData?.name?.split(' ').join('').toLowerCase();
 
+      // Generate random username
+      const randomUsername = jwtToken.generateSessionToken(8);
+
       const newUser = await db.user.create({
         data: {
           ...userData,
+          username: randomUsername,
           image: `https://avatar.vercel.sh/${validName}.svg`,
           password: hashedPassword,
         },

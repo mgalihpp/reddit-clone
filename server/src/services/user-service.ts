@@ -39,15 +39,19 @@ class UserService {
       },
     });
 
-    await Promise.all(
-      posts.map(async (post) => {
-        await redis.hset(`post:${post.id}`, {
-          authorUsername: username,
-        });
-      }),
-    );
+    if (posts) {
+      await Promise.all(
+        posts.map(async (post) => {
+          const postData = await redis.hgetall(`post:${post.id}`);
+          if (postData) {
+            postData.authorUsername = username;
+            await redis.hmset(`post:${post.id}`, postData);
+          }
+        }),
+      );
+    }
 
-    // refresh token 
+    // refresh token
     const accessToken = jwtToken.generateRefreshToken(user);
 
     return { user, accessToken };

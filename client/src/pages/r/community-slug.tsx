@@ -34,6 +34,7 @@ const CommunitySlugPage = () => {
 
       return data;
     },
+    refetchOnWindowFocus: false,
   });
 
   return isLoading ? (

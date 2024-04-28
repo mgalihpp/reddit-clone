@@ -3,6 +3,7 @@ import { db } from '@/configs/db';
 import type { subredditPayload, subscriptionPayload } from '@/types/subreddit';
 import { HttpError } from '@/middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
+import { exclude } from '@/utils';
 
 class SubredditService {
   async createSubreddit(req: Request, payload: subredditPayload): Promise<string> {
@@ -30,6 +31,12 @@ class SubredditService {
     });
 
     return newSubreddit.name;
+  }
+
+  async getAllSubreddit() {
+    const subreddits = await db.subreddit.findMany();
+
+    return subreddits;
   }
 
   async getSlugSubreddit(req: Request, payload: subredditPayload) {
@@ -74,6 +81,13 @@ class SubredditService {
           name: subreddit.name,
         },
       },
+    });
+
+    // map posts without password
+    subreddit.posts = subreddit.posts.map((post) => {
+      exclude(post.author, ['email', 'password']);
+
+      return post;
     });
 
     return {

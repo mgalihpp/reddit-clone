@@ -10,9 +10,14 @@ export const PostService = {
 
     return data;
   },
-  getInfinityPosts: async (limit: number, page: number) => {
+  getInfinityPosts: async (
+    limit: number,
+    page: number,
+    subredditName?: string,
+  ) => {
     const { data } = await apiInstance.get<PostResponse[]>(
-      `/api/posts/criteria?limit=${limit}&page=${page}`,
+      `/api/posts/criteria?limit=${limit}&page=${page}` +
+        (subredditName ? `&subredditName=${subredditName}` : ''),
     );
 
     return data;

@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import React from 'react';
+import React, { Suspense } from 'react';
 import {
   Route,
   createBrowserRouter,
@@ -12,6 +12,7 @@ import SignIn from '@/components/auth/sign-in';
 import { SessionProvider } from '@/providers/SessionProvider';
 import NotFound from '@/not-found';
 import CreatePost from '@/pages/r/submit/create-post';
+import Loader from '@/components/loader';
 
 const App = React.lazy(() => import('@/App'));
 const PrivateRoute = React.lazy(() => import('@/routes/private-route'));
@@ -30,20 +31,71 @@ export const router = createBrowserRouter(
       <Route
         path="/"
         element={
-          <SessionProvider>
-            <PrivateRoute>
-              <RootLayout />
-            </PrivateRoute>
-          </SessionProvider>
+          <Suspense fallback={<Loader container />}>
+            <SessionProvider>
+              <PrivateRoute>
+                <RootLayout />
+              </PrivateRoute>
+            </SessionProvider>
+          </Suspense>
         }
       >
-        <Route path="/" element={<App />} />
-        <Route path="/home" element={<App />} />
-        <Route path="/settings" element={<UserSettings />} />
-        <Route path="/r/create" element={<CreateCommunityPage />} />
-        <Route path="/r/:slug" element={<CommunitySlugPage />} />
-        <Route path="/r/:slug/submit" element={<CreatePost />} />
-        <Route path="/r/:slug/post/:id" element={<SinglePost />} />
+        <Route
+          path="/"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <App />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <App />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <UserSettings />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/r/create"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <CreateCommunityPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/r/:slug"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <CommunitySlugPage />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/r/:slug/submit"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <CreatePost />
+            </Suspense>
+          }
+        />
+        <Route
+          path="/r/:slug/post/:id"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <SinglePost />
+            </Suspense>
+          }
+        />
       </Route>
       {/* PROTECTED ROUTES */}
 

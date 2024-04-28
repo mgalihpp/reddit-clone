@@ -1,11 +1,12 @@
-import { Editor } from '@/components/editor';
 import Loader from '@/components/loader';
 import { Button } from '@/components/ui/button';
 import NotFound from '@/not-found';
 import { SubredditService } from '@/services/subredditServices';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+const Editor = React.lazy(() => import('@/components/editor'));
 
 const CreatePost = () => {
   const { slug } = useParams();
@@ -28,6 +29,7 @@ const CreatePost = () => {
 
       return data;
     },
+    refetchOnWindowFocus: false,
   });
 
   return isLoading ? (
@@ -35,7 +37,7 @@ const CreatePost = () => {
   ) : !data ? (
     <NotFound />
   ) : (
-    <div className="flex flex-col items-start gap-6 my-2">
+    <div className="my-2 flex flex-col items-start gap-6">
       {/* heading */}
       <div className="border-b border-gray-200 pb-5">
         <div className="-ml-2 -mt-2 flex flex-wrap items-baseline">
@@ -50,7 +52,9 @@ const CreatePost = () => {
 
       {/* form */}
       {/* editor */}
-      <Editor subredditId={data?.subreddit.id} />
+      <Suspense fallback={<Loader />}>
+        <Editor subredditId={data?.subreddit.id} />
+      </Suspense>
       {/* editor */}
 
       <div className="flex w-full justify-end">
