@@ -30,6 +30,16 @@ class SubredditController {
     }
   }
 
+  async getAllSubreddits(req: Request, res: Response, next: NextFunction) {
+    try {
+      const subreddits = await subredditService.getAllSubreddit();
+
+      return res.status(HttpStatus.OK).json(subreddits);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getSlugSubreddit(req: Request, res: Response, next: NextFunction) {
     const slugPayload = req.query as subredditPayload;
     // Validate request body against defined validation rules

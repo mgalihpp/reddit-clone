@@ -54,9 +54,6 @@ app.use(
   '/api/uploadthing',
   createRouteHandler({
     router: uploadRouter,
-    config: {
-      isDev: true,
-    },
   }),
 );
 

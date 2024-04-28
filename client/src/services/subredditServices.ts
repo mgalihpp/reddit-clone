@@ -13,9 +13,16 @@ export const SubredditService = {
       token.authorization(),
     );
   },
+
+  getAllSubreddit: async () => {
+    const { data } = await apiInstance.get<Subreddit[]>('/api/subreddit');
+
+    return data;
+  },
+
   getSlugSubreddit: async (name: string) => {
     const { data } = await apiInstance.get<SlugSubredditResponse>(
-      `/api/subreddit?name=${name}`,
+      `/api/subreddit/slug?name=${name}`,
       token.authorization(),
     );
 

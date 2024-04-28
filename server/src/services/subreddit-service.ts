@@ -33,6 +33,12 @@ class SubredditService {
     return newSubreddit.name;
   }
 
+  async getAllSubreddit() {
+    const subreddits = await db.subreddit.findMany();
+
+    return subreddits;
+  }
+
   async getSlugSubreddit(req: Request, payload: subredditPayload) {
     const { name: slug } = payload;
 

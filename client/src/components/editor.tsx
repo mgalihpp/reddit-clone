@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { PostCreationRequest, PostValidator } from '@/lib/validators/post';
 import { z } from 'zod';
 import { toast } from 'react-toastify';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PostService } from '@/services/postServices';
 import { useAppSelector } from '@/hooks';
 import { getToken } from '@/reducers/authReducer';
@@ -19,9 +19,11 @@ interface EditorProps {
   subredditId: string;
 }
 
-export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
+const Editor: React.FC<EditorProps> = ({ subredditId }) => {
   const [isMounted, setIsMounted] = useState(false);
   const token = useAppSelector(getToken);
+
+  const queryClient = useQueryClient();
 
   const ref = useRef<EditorJs>();
   const _titleRef = useRef<HTMLTextAreaElement>(null);
@@ -61,7 +63,9 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     onSuccess: () => {
       const newPathname = pathname.split('/').slice(0, -1).join('/');
       toast.success('Post created!');
-
+      queryClient.invalidateQueries({
+        queryKey: ['posts'],
+      });
       navigate(newPathname);
     },
   });
@@ -239,3 +243,5 @@ export const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     </div>
   );
 };
+
+export default Editor;
