@@ -2,11 +2,12 @@ import Navbar from '@/components/navbar/navbar';
 import Sidebar from '@/components/sidebar';
 import { useMediaQuery } from '@/hooks/use-media-query';
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 
 export default function RootLayout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
   const isMobile = useMediaQuery('(max-width:640px)');
+  const { pathname } = useLocation();
 
   useEffect(() => {
     if (isMobile) {
@@ -14,21 +15,21 @@ export default function RootLayout() {
     } else {
       setSidebarOpen(true);
     }
-  }, [isMobile]);
+  }, [isMobile, pathname]);
 
   return (
-    <div className="min-h-screen pt-12 bg-slate-50 text-slate-900 antialiased light overflow-hidden">
+    <div className="light min-h-screen overflow-hidden bg-slate-50 pt-12 text-slate-900 antialiased">
       {/* Navbar */}
       <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Main Content */}
-      <main className="flex overflow-y-auto mx-auto max-w-screen-2xl bg-slate-50 text-slate-900 antialiased light">
+      <main className="light mx-auto flex max-w-screen-2xl overflow-y-auto bg-slate-50 text-slate-900 antialiased">
         <aside className="relative">
           <Sidebar sidebarOpen={sidebarOpen} />
         </aside>
         <div
           className={`container mx-auto h-full pt-12 ${
-            sidebarOpen ? 'pl-56 xl:pl-72' : ''
+            sidebarOpen ? 'pl-56 max-sm:pl-8 xl:pl-72' : ''
           }`}
         >
           <Outlet />

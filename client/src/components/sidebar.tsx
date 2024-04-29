@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
   return (
     <div
-      className={`fixed flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out xl:min-w-[270px] ${
+      className={`fixed z-10 max-sm:min-w-[300px] flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out xl:min-w-[270px] ${
         sidebarOpen
           ? 'translate-x-0 fade-in-5'
           : 'w-[-1px] -translate-x-full opacity-0 fade-out-0'

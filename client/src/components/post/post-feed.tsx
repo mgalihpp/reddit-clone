@@ -26,7 +26,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   const session = useSession();
 
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['infinite-query'],
+    queryKey: ['infinite-query', subredditName],
     queryFn: async ({ pageParam }) => {
       const data = await PostService.getInfinityPosts(
         INFINITE_SCROLL_PAGINATION_RESULTS,
@@ -51,6 +51,8 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   }, [entry, fetchNextPage]);
 
   const posts = data.pages.flatMap((page) => page) ?? initialPosts;
+
+  console.log('posts', posts);
 
   return (
     <ul className="col-span-2 flex flex-col space-y-6">
@@ -100,4 +102,4 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   );
 };
 
-export default PostFeed;
+export default React.memo(PostFeed);
