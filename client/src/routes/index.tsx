@@ -22,20 +22,30 @@ const CreateCommunityPage = React.lazy(
 const CommunitySlugPage = React.lazy(() => import('@/pages/r/community-slug'));
 const SinglePost = React.lazy(() => import('@/pages/r/post/single-post'));
 const UserSettings = React.lazy(() => import('@/pages/settings/user-settings'));
+const UserPage = React.lazy(() => import('@/pages/user/user-page'));
+const UserOverView = React.lazy(() => import('@/pages/user/user-overview'));
+const UserPosts = React.lazy(() => import('@/pages/user/user-posts'));
+const UserComments = React.lazy(() => import('@/pages/user/user-comments'));
+
+const privateRoutesPath = [
+  { path: '/settings', element: UserSettings },
+  { path: '/r/create', element: CreateCommunityPage },
+  { path: '/r/:slug', element: CommunitySlugPage },
+  { path: '/r/:slug/post/:id', element: SinglePost },
+  { path: '/r/:slug/submit', element: CreatePost },
+  // { path: '/user/:username', element: UserPage },
+];
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      {/* PROTECTED ROUTES */}
       {/* Home Page */}
       <Route
         path="/"
         element={
           <Suspense fallback={<Loader container />}>
             <SessionProvider>
-              <PrivateRoute>
-                <RootLayout />
-              </PrivateRoute>
+              <RootLayout />
             </SessionProvider>
           </Suspense>
         }
@@ -56,50 +66,58 @@ export const router = createBrowserRouter(
             </Suspense>
           }
         />
-        <Route
-          path="/settings"
-          element={
-            <Suspense fallback={<Loader container2 />}>
-              <UserSettings />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/r/create"
-          element={
-            <Suspense fallback={<Loader container2 />}>
-              <CreateCommunityPage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/r/:slug"
-          element={
-            <Suspense fallback={<Loader container2 />}>
-              <CommunitySlugPage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/r/:slug/submit"
-          element={
-            <Suspense fallback={<Loader container2 />}>
-              <CreatePost />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/r/:slug/post/:id"
-          element={
-            <Suspense fallback={<Loader container2 />}>
-              <SinglePost />
-            </Suspense>
-          }
-        />
-      </Route>
-      {/* PROTECTED ROUTES */}
 
-      {/* PUBLIC ROUTES */}
+        {/* USER ROUTES */}
+        <Route
+          path="/user/:username/*"
+          element={
+            <Suspense fallback={<Loader container2 />}>
+              <UserPage />
+            </Suspense>
+          }
+        >
+          <Route
+            path=""
+            element={
+              <Suspense fallback={<Loader />}>
+                <UserOverView />
+              </Suspense>
+            }
+          />
+          <Route
+            path="posts"
+            element={
+              <Suspense fallback={<Loader />}>
+                <UserPosts />
+              </Suspense>
+            }
+          />
+          <Route
+            path="comments"
+            element={
+              <Suspense fallback={<Loader />}>
+                <UserComments />
+              </Suspense>
+            }
+          />
+        </Route>
+
+        {/* PRIVATE ROUTES */}
+        {privateRoutesPath.map(({ path, element: Component }, index) => (
+          <Route
+            key={index}
+            path={path}
+            element={
+              <Suspense fallback={<Loader container2 />}>
+                <PrivateRoute>
+                  <Component />
+                </PrivateRoute>
+              </Suspense>
+            }
+          />
+        ))}
+      </Route>
+
       {/* Authentication Page */}
       <Route element={<AuthLayout />}>
         <Route path="sign-in" element={<SignIn />} />
@@ -107,7 +125,6 @@ export const router = createBrowserRouter(
       </Route>
 
       <Route path="*" element={<NotFound />} />
-      {/* PUBLIC ROUTES */}
     </>,
   ),
 );

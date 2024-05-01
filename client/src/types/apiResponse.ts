@@ -36,3 +36,8 @@ export type SlugSubredditResponse = {
   isSubcribed: boolean;
   memberCount: number;
 };
+
+export type UserWithPostsResponse = {
+  user: User;
+  posts: ExtendedPost[];
+};

@@ -1,13 +1,20 @@
 import { useAppDispatch, useAppSelector } from '@/hooks';
 import { apiInstance } from '@/lib/axios';
 import { getCurrentUser, resetState } from '@/reducers/authReducer';
+import type { UserWithPostsResponse } from '@/types/apiResponse';
 import type { updateUserPayload } from '@/types/user';
 import token from '@/utils/token';
 import { useQuery } from '@tanstack/react-query';
 
 export const UserService = {
-  fetchUsers: async () => {
+  fetchUsers: async (username: string) => {
     // Implement fetching users logic here
+
+    const { data } = await apiInstance.get<UserWithPostsResponse>(
+      `/api/users/username?username=${username}`,
+    );
+
+    return data;
   },
 
   getSession: (): Session => {

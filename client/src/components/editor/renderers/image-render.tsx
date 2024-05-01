@@ -2,12 +2,12 @@ function CustomImageRenderer({ data }: any) {
   const src = data.file.url;
 
   return (
-    <div className="relative w-full min-h-[15rem]">
+    <div className="relative w-full max-h-96">
       <img
         alt="image"
         className="object-contain"
-        width="500px"
-        height="500px"
+        width="384px"
+        height="384px"
         loading="lazy"
         src={src}
       />

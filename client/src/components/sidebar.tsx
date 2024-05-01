@@ -3,12 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Loader from '@/components/loader';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from './ui/button';
 
 interface SidebarProps {
   sidebarOpen: boolean;
+  pathname: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
   const { data: subbredits, isLoading } = useQuery({
     queryKey: ['subreddits'],
     queryFn: async () => {
@@ -21,7 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
 
   return (
     <div
-      className={`fixed z-10 max-sm:min-w-[300px] flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out xl:min-w-[270px] ${
+      className={`fixed z-10 top-16 flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out max-md:min-w-[300px] xl:min-w-[270px] ${
         sidebarOpen
           ? 'translate-x-0 fade-in-5'
           : 'w-[-1px] -translate-x-full opacity-0 fade-out-0'
@@ -36,7 +39,12 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
           <li>
             <Link
               to="/home"
-              className="flex flex-grow items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700"
+              className={cn(
+                'flex flex-grow items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100',
+                {
+                  'bg-gray-100': pathname === '/home',
+                },
+              )}
             >
               <Home className="size-4 sm:size-6 " />
               Home
@@ -51,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
             <li>
               <details className="group [&_summary::-webkit-details-marker]:hidden">
                 <summary className="flex cursor-pointer items-center justify-between rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                  <span className="text-sm font-medium"> Communities </span>
+                  <span className="text-sm font-medium">Communities</span>
 
                   <span className="shrink-0 transition duration-300 group-open:-rotate-180">
                     <svg
@@ -73,7 +81,12 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
                     <li key={sub.id}>
                       <Link
                         to={`/r/${sub.name}`}
-                        className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                        className={cn(
+                          'block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700',
+                          {
+                            'bg-gray-100': pathname === `/r/${sub.name}`,
+                          },
+                        )}
                       >
                         r/{sub.name}
                       </Link>
@@ -85,6 +98,15 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen }) => {
           )}
         </ul>
       </nav>
+
+      {/* Sidebar footer */}
+
+      <Link
+        to="/sign-in"
+        className={buttonVariants({ className: 'hidden text-center mx-4 max-md:block sticky inset-x-0 bottom-5' })}
+      >
+        Sign in
+      </Link>
 
       {/* <div className="sticky inset-x-0 bottom-0 border-t border-gray-100">
         <Link

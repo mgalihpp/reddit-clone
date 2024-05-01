@@ -16,6 +16,38 @@ class UserController {
     }
   }
 
+  async getUserByUsername(req: Request, res: Response, next: NextFunction) {
+    const payload = req.query;
+
+    // Validate request body against defined validation rules
+    await Promise.all(
+      userValidators.getUserByNameValidationRules.map((validation) =>
+        validation.run(req),
+      ),
+    );
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+    }
+
+    // If validation passes, proceed with user logic
+
+    try {
+      const { user, posts } = await userService.getUserByUsername(
+        payload.username as string,
+      );
+
+      delete (user as any)?.email;
+      delete (user as any)?.password;
+
+      return res.status(HttpStatus.OK).json({ user, posts });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async updateUser(req: Request, res: Response, next: NextFunction) {
     const payload = req.body;
 

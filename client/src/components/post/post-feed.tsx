@@ -52,8 +52,6 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
 
   const posts = data.pages.flatMap((page) => page) ?? initialPosts;
 
-  console.log('posts', posts);
-
   return (
     <ul className="col-span-2 flex flex-col space-y-6">
       {posts.map((post, index) => {

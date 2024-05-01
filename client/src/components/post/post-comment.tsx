@@ -1,4 +1,3 @@
-import { useSession } from '@/providers/SessionProvider';
 import { UserAvatar } from '@/components/user-avatar';
 import { formatTimeToNow } from '@/lib/utils';
 import CommentVotes from './comment-votes';
@@ -33,8 +32,6 @@ const PostComment: React.FC<PostCommentProps> = ({
   postId,
   refetch
 }) => {
-  const session = useSession();
-
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState<string>(`@${comment.author.username} `);
@@ -70,8 +67,8 @@ const PostComment: React.FC<PostCommentProps> = ({
       <div className="flex items-center">
         <UserAvatar
           user={{
-            name: session?.name || null,
-            image: session?.image || null,
+            name: comment.author.name || null,
+            image: comment.author.image || null,
           }}
           className="size-6"
         />

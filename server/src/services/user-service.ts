@@ -1,3 +1,4 @@
+import HttpStatus from 'http-status-codes';
 import jwtToken from '@/utils/auth';
 import jwt from 'jsonwebtoken';
 import { User } from '@prisma/client';
@@ -5,6 +6,8 @@ import { Request } from 'express';
 import { updateUserPayload } from '@/types/user';
 import { db } from '@/configs/db';
 import { redis } from '@/configs/redis';
+import { HttpError } from '@/middlewares/error-handlers';
+import { exclude } from '@/utils';
 
 class UserService {
   verifyTokenAndGetUser(token: string): Promise<User> {
@@ -19,8 +22,44 @@ class UserService {
     });
   }
 
+  async getUserByUsername(username: string) {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+    });
+
+    if (!user) throw new HttpError(HttpStatus.NOT_FOUND, 'User not found');
+
+    const userPosts = await db.post.findMany({
+      where: {
+        authorId: user?.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        author: true,
+        subreddit: true,
+        comments: true,
+        votes: true,
+      },
+    });
+
+    const postAuthourWIthoutPassword = userPosts.map((post) => {
+      exclude(post.author, ['email', 'password']);
+
+      return post;
+    });
+
+    return { user, posts: postAuthourWIthoutPassword };
+  }
+
+
   async updateUser(req: Request, payload: updateUserPayload) {
     const { name, image, username } = payload;
+
+    const validUsername = username?.replace(/\s+/g, '');
 
     const user = await db.user.update({
       where: {
@@ -29,7 +68,7 @@ class UserService {
       data: {
         name,
         image,
-        username,
+        username: validUsername,
       },
     });
 

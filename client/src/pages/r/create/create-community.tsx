@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useSession } from '@/providers/SessionProvider';
 import { SubredditService } from '@/services/subredditServices';
 import { dynamicTitle } from '@/utils/title';
 import { useDocumentTitle } from '@mantine/hooks';
@@ -10,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const CreateCommunityPage = () => {
+  const session = useSession();
   const navigate = useNavigate();
   useDocumentTitle(dynamicTitle('Create Community'));
   const [input, setInput] = useState('');
@@ -36,20 +38,20 @@ const CreateCommunityPage = () => {
   });
 
   return (
-    <div className="flex items-center h-full mx-auto">
-      <div className="relative bg-white w-full h-fit rounded-lg p-4 space-y-6">
-        <div className="flex justify-between items-center">
+    <div className="mx-auto flex h-full items-center">
+      <div className="relative h-fit w-full space-y-6 rounded-lg bg-white p-4">
+        <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold">Create a Community</h1>
         </div>
-        <hr className="bg-red-500 h-px" />
+        <hr className="h-px bg-red-500" />
 
         <div>
           <p className="text-lg font-medium">Name</p>
-          <p className="text-xs pb-2">
+          <p className="pb-2 text-xs">
             Community names including capitalization cannot be changed.
           </p>
           <div className="relative">
-            <p className="absolute text-sm left-0 w-8 inset-y-0 grid place-items-center text-zinc-400">
+            <p className="absolute inset-y-0 left-0 grid w-8 place-items-center text-sm text-zinc-400">
               r/
             </p>
             <Input
@@ -70,7 +72,15 @@ const CreateCommunityPage = () => {
           <Button
             isLoading={isPending}
             disabled={input.length === 0}
-            onClick={() => createCommunity()}
+            onClick={() => {
+              if (!session) {
+                toast.error('Please sign in to create a community');
+                navigate('/sign-in');
+                return;
+              }
+
+              createCommunity();
+            }}
           >
             Create Community
           </Button>

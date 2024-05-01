@@ -23,7 +23,6 @@ const authSlice = createSlice({
       return initialState;
     },
     updateUser: (state, action) => {
-      console.log(action.payload);
       // Keep a copy of the original state
       const originalUser = { ...state.user };
       // Update only the values provided in the action payload

@@ -1,12 +1,13 @@
-import Navbar from '@/components/navbar/navbar';
-import Sidebar from '@/components/sidebar';
-import { useMediaQuery } from '@/hooks/use-media-query';
 import React, { useEffect } from 'react';
+import { useMediaQuery } from '@/hooks/use-media-query';
 import { Outlet, useLocation } from 'react-router-dom';
+
+const Navbar = React.lazy(() => import('@/components/navbar/navbar'));
+const Sidebar = React.lazy(() => import('@/components/sidebar'));
 
 export default function RootLayout() {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
-  const isMobile = useMediaQuery('(max-width:640px)');
+  const isMobile = useMediaQuery('(max-width:768px)');
   const { pathname } = useLocation();
 
   useEffect(() => {
@@ -25,11 +26,11 @@ export default function RootLayout() {
       {/* Main Content */}
       <main className="light mx-auto flex max-w-screen-2xl overflow-y-auto bg-slate-50 text-slate-900 antialiased">
         <aside className="relative">
-          <Sidebar sidebarOpen={sidebarOpen} />
+          <Sidebar sidebarOpen={sidebarOpen} pathname={pathname} />
         </aside>
         <div
           className={`container mx-auto h-full pt-12 ${
-            sidebarOpen ? 'pl-56 max-sm:pl-8 xl:pl-72' : ''
+            sidebarOpen ? 'pl-56 max-md:pl-8 xl:pl-72' : ''
           }`}
         >
           <Outlet />

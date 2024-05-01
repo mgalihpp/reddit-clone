@@ -3,11 +3,11 @@ import Loader from '@/components/loader';
 import NotFound from '@/not-found';
 import { SubredditService } from '@/services/subredditServices';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import FeedButton from '@/components/post/feed-btn';
 import { format } from 'date-fns';
 import { useSession } from '@/providers/SessionProvider';
-import { buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import SubscribeBtn from '@/components/subscribe-btn';
 import MiniCreatePost from '@/components/post/mini-create-post';
 import PostFeed from '@/components/post/post-feed';
@@ -55,6 +55,8 @@ const CommunitySlugPage = () => {
             <MiniCreatePost session={session} />
             {isLoading ? (
               <Loader />
+            ) : data.subreddit.posts.length === 0 ? (
+              <p className='text-center'>No posts</p>
             ) : !data.subreddit.posts ? (
               <NotFound />
             ) : (
@@ -104,15 +106,21 @@ const CommunitySlugPage = () => {
               />
             ) : null}
 
-            <Link
-              to={`/r/${slug}/submit`}
-              className={buttonVariants({
-                variant: 'outline',
-                className: 'mb-6 w-full',
-              })}
+            <Button
+              variant="outline"
+              className="mb-4 w-full"
+              disabled={!data.isSubcribed}
+              onClick={() => {
+                navigate(`/r/${slug}/submit`);
+              }}
             >
               Create Post
-            </Link>
+            </Button>
+            <div className="flex items-center justify-center gap-1">
+              <p className="text-[10px]">
+                You must subscribe to be able to create posts
+              </p>
+            </div>
           </dl>
         </div>
       </div>

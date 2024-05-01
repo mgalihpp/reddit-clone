@@ -16,7 +16,7 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
 
   useEffect(() => {
     if (user !== undefined && !user) {
-      navigate("/sign-in");
+      // navigate("/sign-in");
     }
   }, [user, navigate]);
 

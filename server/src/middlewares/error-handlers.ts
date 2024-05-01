@@ -15,8 +15,8 @@ export const errorHandler = (error: Error, req: Request, res: Response, next: Ne
   console.error('Error Message: ', error.message); // Log the error for debugging
 
   // Determine the status code and error message
-  const status = error instanceof HttpError ? error.status : 500;
-  const message = error.message || 'Internal Server Error';
+  const status = error instanceof HttpError ? error.status : 400;
+  const message = error.message || 'Bad Request';
 
   // Send the error response as JSON
   res.status(status).json({ error: message });

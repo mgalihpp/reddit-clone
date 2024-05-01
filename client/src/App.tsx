@@ -37,7 +37,7 @@ function App() {
 
         {/* subreddit info */}
 
-        <div className="boder-gray-200 order-first h-fit overflow-hidden rounded-lg border md:order-last">
+        <div className="boder-gray-200 order-first h-fit overflow-hidden rounded-lg border md:col-end-4 md:order-last">
           <div className="bg-emerald-100 px-6 py-4">
             <p className="flex items-center gap-1.5 py-3 font-semibold">
               <HomeIcon className="size-5" />
