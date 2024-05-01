@@ -18,7 +18,7 @@ class SubredditService {
     const newSubreddit = await db.subreddit.create({
       data: {
         name,
-        creatorId: req.user?.name,
+        creatorId: req.user?.id as string,
       },
     });
 
