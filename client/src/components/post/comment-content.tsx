@@ -6,7 +6,7 @@ interface CommentContentProps {
 
 const CommentContent: React.FC<CommentContentProps> = ({ text }) => {
   return (
-    <p className="mt-2 text-xs text-zinc-900">
+    <p className="mt-2 text-xs text-zinc-900 break-words">
       {text.split('\n').map((line, index) => (
         <React.Fragment key={index}>
           {index > 0 && <br />} {/* Render <br> except for the first line */}
