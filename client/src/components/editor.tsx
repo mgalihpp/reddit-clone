@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import TextAreaAutoSize from 'react-textarea-autosize';
 import EditorJs from '@editorjs/editorjs';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { uploadFiles } from '@/utils/uploadthing';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,6 +28,7 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
   const ref = useRef<EditorJs>();
   const _titleRef = useRef<HTMLTextAreaElement>(null);
 
+  const { slug } = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -65,6 +66,9 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
       toast.success('Post created!');
       queryClient.invalidateQueries({
         queryKey: ['posts'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['slug-subreddit', slug],
       });
       navigate(newPathname);
     },

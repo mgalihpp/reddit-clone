@@ -29,7 +29,7 @@ const loginFormSchema = z.object({
 });
 
 const registerFormSchema = z.object({
-  name: z.string().min(4),
+  name: z.string().min(4).max(50),
   email: z.string().email(),
   password: z.string().min(6),
 });

@@ -5,6 +5,8 @@ import FeedButton from '@/components/post/feed-btn';
 import { formatTimeToNow } from '@/lib/utils';
 import NotFound from '@/not-found';
 import { PostService } from '@/services/postServices';
+import { dynamicTitle } from '@/utils/title';
+import { useDocumentTitle } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -32,6 +34,9 @@ const SinglePost = () => {
     },
     refetchOnWindowFocus: false,
   });
+
+  const title = (data?.cachedPost?.title ?? data?.post?.title) || '';
+  useDocumentTitle(dynamicTitle(title));
 
   return isLoading ? (
     <Loader container />

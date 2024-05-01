@@ -13,7 +13,7 @@ interface PostFeedProps {
 }
 
 // 2 to demonstrate infinite scroll, should be higher in production
-const INFINITE_SCROLL_PAGINATION_RESULTS = 2;
+const INFINITE_SCROLL_PAGINATION_RESULTS = 10;
 
 const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   const lastPostRef = useRef<HTMLDivElement>(null);

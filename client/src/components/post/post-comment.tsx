@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { MessageSquare } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '../ui/textarea';
+import React from 'react';
+import CommentContent from './comment-content';
 
 type ExtendedComment = Comments & {
   votes: CommentVote[];
@@ -30,7 +32,7 @@ const PostComment: React.FC<PostCommentProps> = ({
   votesAmt,
   currentVote,
   postId,
-  refetch
+  refetch,
 }) => {
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
@@ -57,7 +59,7 @@ const PostComment: React.FC<PostCommentProps> = ({
       toast.error('Something went wrong!');
     },
     onSuccess: () => {
-      refetch()
+      refetch();
       setIsReplying(false);
     },
   });
@@ -82,7 +84,7 @@ const PostComment: React.FC<PostCommentProps> = ({
         </div>
       </div>
 
-      <p className="mt-2 text-xs text-zinc-900">{comment.text}</p>
+      <CommentContent text={comment.text} />
 
       <div className="flex items-center gap-2">
         <CommentVotes
