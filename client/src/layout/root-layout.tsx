@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useMediaQuery } from '@/hooks/use-media-query';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom';
 
 const Navbar = React.lazy(() => import('@/components/navbar/navbar'));
 const Sidebar = React.lazy(() => import('@/components/sidebar'));
@@ -36,6 +36,17 @@ export default function RootLayout() {
           <Outlet />
         </div>
       </main>
+
+      {/* Scroll Restoration by pathname */}
+      <ScrollRestoration
+        getKey={(location) => {
+          const paths = ['/', '/home'];
+
+          return paths.includes(location.pathname)
+            ? location.pathname
+            : location.key;
+        }}
+      />
     </div>
   );
 }

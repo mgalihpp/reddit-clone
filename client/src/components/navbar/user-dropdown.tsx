@@ -1,22 +1,23 @@
-import React from "react";
+import React from 'react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { UserAvatar } from "@/components/user-avatar";
-import { Link } from "react-router-dom";
-import { useAppDispatch } from "@/hooks";
-import { resetState } from "@/reducers/authReducer";
+} from '@/components/ui/dropdown-menu';
+import { UserAvatar } from '@/components/user-avatar';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/hooks';
+import { resetState } from '@/reducers/authReducer';
 
 interface UserDropDownProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
-  user: Pick<User, "name" | "image" | "email">;
+  user: Pick<User, 'name' | 'image' | 'email'>;
 }
 
 const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
   const dispacth = useAppDispatch();
+  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -49,6 +50,8 @@ const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
           onSelect={(e) => {
             e.preventDefault();
             dispacth(resetState());
+
+            return navigate('/sign-in');
           }}
         >
           Logout

@@ -1,6 +1,7 @@
 import CustomCodeRenderer from '@/components/editor/renderers/code-render';
 import CustomImageRenderer from '@/components/editor/renderers/image-render';
 import CustomVideoRenderer from '@/components/editor/renderers/video-render';
+import CustomListRender from '@/components/editor/renderers/list-render';
 import { FC } from 'react';
 
 import Output from 'editorjs-react-renderer';
@@ -13,6 +14,7 @@ const renderers = {
   image: CustomImageRenderer,
   code: CustomCodeRenderer,
   video: CustomVideoRenderer,
+  list: CustomListRender,
 };
 
 const style = {

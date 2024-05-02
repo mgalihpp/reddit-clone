@@ -7,7 +7,7 @@ const PostFeed = React.lazy(() => import('@/components/post/post-feed'));
 
 const CustomFeed: React.FC = () => {
   const { data: posts, isLoading } = useQuery({
-    queryKey: ['posts'],
+    queryKey: ['posts-followed'],
     queryFn: async () => await PostService.getPostsByFollowedCommunity(),
     refetchOnWindowFocus: false,
   });
