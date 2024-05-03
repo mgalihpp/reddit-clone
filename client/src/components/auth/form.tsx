@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
-import { z } from "zod";
-import { loadingState } from "@/reducers/authReducer";
-import { useAppDispatch, useAppSelector } from "@/hooks";
-import { Button } from "@/components/ui/button";
-import { Icons } from "@/components/icons";
-import { Separator } from "@/components/ui/separator";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import React, { useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
+import { z } from 'zod';
+import { loadingState } from '@/reducers/authReducer';
+import { useAppDispatch, useAppSelector } from '@/hooks';
+import { Button } from '@/components/ui/button';
+import { Icons } from '@/components/icons';
+import { Separator } from '@/components/ui/separator';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
   FormControl,
@@ -15,11 +15,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { toast } from "react-toastify";
-import { login, register } from "@/actions/authActions";
-import { useLocation } from "react-router-dom";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { toast } from 'react-toastify';
+import { login, register } from '@/actions/authActions';
+import { useLocation } from 'react-router-dom';
 
 interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -37,46 +37,46 @@ const registerFormSchema = z.object({
 const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   const dispacth = useAppDispatch();
   const isLoading = useAppSelector(loadingState);
-  const [authAction, setAuthAction] = useState<string>("");
+  const [authAction, setAuthAction] = useState<string>('');
 
   const { pathname } = useLocation();
 
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-    reValidateMode: "onSubmit",
+    reValidateMode: 'onSubmit',
   });
 
   const registerForm = useForm<z.infer<typeof registerFormSchema>>({
     resolver: zodResolver(registerFormSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
+      name: '',
+      email: '',
+      password: '',
     },
-    reValidateMode: "onSubmit",
+    reValidateMode: 'onSubmit',
   });
 
   useEffect(() => {
     // Extract the action from the pathname
-    if (pathname === "/sign-in") {
-      setAuthAction("login");
+    if (pathname === '/sign-in') {
+      setAuthAction('login');
       // Reset the register form state
       registerForm.reset();
-    } else if (pathname === "/sign-up") {
-      setAuthAction("register");
+    } else if (pathname === '/sign-up') {
+      setAuthAction('register');
       loginForm.reset();
     }
   }, [pathname, loginForm, registerForm]);
 
   const handleLogin = (input: z.infer<typeof loginFormSchema>) => {
     dispacth(login(input)).then((value) => {
-      if (value.meta.requestStatus === "fulfilled") {
+      if (value.meta.requestStatus === 'fulfilled') {
         toast.success(`Login Success!`);
-      } else if (value.meta.requestStatus === "rejected") {
+      } else if (value.meta.requestStatus === 'rejected') {
         toast.error(`Invalid password or credentials!`);
       }
     });
@@ -84,9 +84,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
 
   const handleRegister = (input: z.infer<typeof registerFormSchema>) => {
     dispacth(register(input)).then((value) => {
-      if (value.meta.requestStatus === "fulfilled") {
+      if (value.meta.requestStatus === 'fulfilled') {
         toast.success(`Register Success!`);
-      } else if (value.meta.requestStatus === "rejected") {
+      } else if (value.meta.requestStatus === 'rejected') {
         toast.error(`Invalid credentials!`);
       }
     });
@@ -94,10 +94,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
 
   return (
     <div
-      className={cn("flex flex-col justify-center gap-2", className)}
+      className={cn('flex flex-col justify-center gap-2', className)}
       {...props}
     >
-      {authAction === "login" && (
+      {authAction === 'login' && (
         <div>
           <Form {...loginForm}>
             <form
@@ -111,7 +111,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter email address" {...field} autoComplete="email" />
+                      <Input
+                        placeholder="Enter email address"
+                        {...field}
+                        autoComplete="email"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -143,13 +147,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                 disabled={isLoading}
                 isLoading={isLoading}
               >
-                {isLoading ? "" : "Login"}
+                {isLoading ? '' : 'Login'}
               </Button>
             </form>
           </Form>
         </div>
       )}
-      {authAction === "register" && (
+      {authAction === 'register' && (
         <div>
           <Form {...registerForm}>
             <form
@@ -163,7 +167,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter name" {...field} autoComplete="name" />
+                      <Input
+                        placeholder="Enter name"
+                        {...field}
+                        autoComplete="name"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -176,7 +184,11 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="Enter email address" {...field} autoComplete="email" />
+                      <Input
+                        placeholder="Enter email address"
+                        {...field}
+                        autoComplete="email"
+                      />
                     </FormControl>
                     <FormMessage className="text-red-500" />
                   </FormItem>
@@ -208,7 +220,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
                 disabled={isLoading}
                 isLoading={isLoading}
               >
-                {isLoading ? "" : "Register"}
+                {isLoading ? '' : 'Register'}
               </Button>
             </form>
           </Form>
@@ -221,11 +233,27 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
         disabled={isLoading}
         isLoading={isLoading}
         type="button"
+        variant="subtle"
+        size="sm"
+        className="w-full text-xs"
+        onClick={() => {
+          handleLogin({
+            email: 'demo@user.com',
+            password: 'demouser123',
+          });
+        }}
+      >
+        {isLoading ? null : 'Sign in as Demo user'}
+      </Button>
+      <Button
+        disabled={isLoading}
+        isLoading={isLoading}
+        type="button"
         size="sm"
         className="w-full"
         onClick={() => {}}
       >
-        {isLoading ? null : <Icons.google className="size-4 mr-2" />}
+        {isLoading ? null : <Icons.google className="mr-2 size-4" />}
         Google
       </Button>
     </div>
