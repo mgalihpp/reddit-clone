@@ -24,6 +24,7 @@ import { updateUser } from '@/reducers/authReducer';
 import { persistor } from '@/store';
 import { UserAvatar } from './user-avatar';
 import { uploadFiles } from '@/utils/uploadthing';
+import { useCursorWait } from '@/hooks/use-cursor-wait';
 
 interface UserFormProps extends React.HTMLAttributes<HTMLFormElement> {
   user: Pick<User, 'username' | 'name' | 'image'>;
@@ -79,7 +80,7 @@ const UserForm: React.FC<UserFormProps> = ({ user, className, ...props }) => {
     },
   });
 
-  const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
@@ -106,10 +107,14 @@ const UserForm: React.FC<UserFormProps> = ({ user, className, ...props }) => {
       setUploadLoading(false);
     } catch (err) {
       console.error(err);
-      toast.error('Failed to upload image');
+      toast.error(
+        'Failed to upload image, make sure the extension is .jpg or .png',
+      );
       setUploadLoading(false);
     }
   };
+
+  useCursorWait(uploadLoading);
 
   return (
     <form
@@ -169,13 +174,13 @@ const UserForm: React.FC<UserFormProps> = ({ user, className, ...props }) => {
                 id="image"
                 className="hidden"
                 accept={'.jpg, .jpeg, .png, .webp'}
-                onChange={handleInputChange}
+                onChange={handleImageChange}
               />
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button isLoading={isPending}>Change name</Button>
+          <Button isLoading={isPending || uploadLoading}>Change name</Button>
         </CardFooter>
       </Card>
     </form>

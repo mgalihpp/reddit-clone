@@ -1,9 +1,9 @@
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
-import subredditValidators from '@validators/subreddit-validators';
+import subredditValidators from './../validators/subreddit-validators';
 import HttpStatus from 'http-status-codes';
-import subredditService from '@services/subreddit-service';
-import type { subredditPayload } from '@/types/subreddit';
+import subredditService from './../services/subreddit-service';
+import type { subredditPayload } from './../types/subreddit';
 
 class SubredditController {
   async createSubreddit(req: Request, res: Response, next: NextFunction) {
@@ -23,6 +23,33 @@ class SubredditController {
     // If validation passes, proceed with subreddit logic
     try {
       const subredditName = await subredditService.createSubreddit(req, subredditPayload);
+
+      return res.status(HttpStatus.OK).json(subredditName);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateSubreddit(req: Request, res: Response, next: NextFunction) {
+    const subredditPayload = req.body;
+
+    // Validate request body against defined validation rules
+    await Promise.all(
+      subredditValidators.updateSubredditPayloadValidationRules.map((validation) =>
+        validation.run(req),
+      ),
+    );
+
+    // Check for validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: errors.array() });
+    }
+
+    // If validation passes, proceed with subreddit logic
+
+    try {
+      const subredditName = await subredditService.updateSubreddit(subredditPayload);
 
       return res.status(HttpStatus.OK).json(subredditName);
     } catch (error) {

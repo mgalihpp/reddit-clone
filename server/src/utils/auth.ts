@@ -2,14 +2,12 @@ import jwt from 'jsonwebtoken';
 
 class JwtToken {
   private accessTokenSecret: string;
-  private refreshTokenSecret: string;
 
   private static readonly characters =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  constructor(accessTokenSecret: string, refreshTokenSecret: string) {
+  constructor(accessTokenSecret: string) {
     this.accessTokenSecret = accessTokenSecret;
-    this.refreshTokenSecret = refreshTokenSecret;
   }
 
   generateAccessToken(payload: any): string {
@@ -17,7 +15,7 @@ class JwtToken {
   }
 
   generateRefreshToken(payload: any): string {
-    return jwt.sign(payload, this.refreshTokenSecret, { expiresIn: '1h' });
+    return jwt.sign(payload, this.accessTokenSecret, { expiresIn: '1h' });
   }
 
   public generateSessionToken(length: number): string {
@@ -31,4 +29,4 @@ class JwtToken {
   }
 }
 
-export default new JwtToken(process.env.JWT_SECRET!, process.env.JWT_SECRET!);
+export default new JwtToken(process.env.JWT_SECRET!);

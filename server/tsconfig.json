@@ -2,14 +2,13 @@
     "compilerOptions": {
         "outDir": "dist",
         "baseUrl": "./",
-        "target": "ESNext",
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+        "target": "ES5",
+        "module": "CommonJS",
         "strict": true,
         "downlevelIteration": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "skipLibCheck": false,
+        "skipLibCheck": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "resolveJsonModule": true,
@@ -18,33 +17,22 @@
         "declaration": false,
         "strictNullChecks": true,
         "noEmit": false,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noImplicitAny": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "noImplicitAny": false,
         "noImplicitReturns": false,
-        "paths": {
-            "@/*": ["src/*"],
-            "@configs/*": ["src/configs/*"],
-            "@controllers/*": ["src/controllers/*"],
-            "@helpers/*": ["src/helpers/*"],
-            "@interfaces/*": ["src/interfaces/*"],
-            "@libs/*": ["src/libs/*"],
-            "@middlewares/*": ["src/middlewares/*"],
-            "@validators/*": ["src/validators/*"],
-            "@models/*": ["src/models/*"],
-            "@routes/*": ["src/routes/*"],
-            "@services/*": ["src/services/*"]
-          },
     },
-    "include": [
-        "src/**/*.ts"
-    ],
+    // "include": [
+    //     "src/**/*.ts"
+    // ],
     "ts-node": {
-        "require": ["tsconfig-paths/register"],
         "compilerHost": true,
         "transpileOnly": true,
         "files": true,
         "pretty": true
     },
-    "exclude": ["__test__", "node_modules"]
+    "exclude": [
+        "__test__",
+        "node_modules"
+    ],
 }

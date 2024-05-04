@@ -14,6 +14,18 @@ export const SubredditService = {
     );
   },
 
+  updateSubreddit: async (payload: {
+    id: string;
+    image?: string;
+    description?: string;
+  }) => {
+    return await apiInstance.put<CreateSubredditResponse>(
+      '/api/subreddit',
+      payload,
+      token.authorization(),
+    );
+  },
+
   getAllSubreddit: async () => {
     const { data } = await apiInstance.get<Subreddit[]>('/api/subreddit');
 

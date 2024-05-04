@@ -1,6 +1,6 @@
 import type { Request } from 'express';
-import { db } from '@/configs/db';
-import { INFINITE_SCROLL_PAGINATION_RESULTS } from '@/configs';
+import { db } from './../configs/db';
+import { INFINITE_SCROLL_PAGINATION_RESULTS } from './../configs';
 import type {
   CachedPost,
   CreatePostPayload,
@@ -9,12 +9,12 @@ import type {
   PostPayloadById,
   PostVoteAuthor,
   VotePostPayload,
-} from '@/types/post';
-import subredditService from '@services/subreddit-service';
+} from './../types/post';
+import subredditService from './../services/subreddit-service';
 import HttpStatus from 'http-status-codes';
-import { HttpError } from '@/middlewares/error-handlers';
-import { redis } from '@/configs/redis';
-import { exclude } from '@/utils';
+import { HttpError } from './../middlewares/error-handlers';
+import { redis } from './../configs/redis';
+import { exclude } from './../utils';
 
 class PostService {
   async getPosts(): Promise<ExtendedPost[]> {
@@ -334,6 +334,46 @@ class PostService {
     }
 
     return 'OK';
+  }
+
+  async deletePost(postId: string) {
+    const post = await db.post.findFirst({
+      where: {
+        id: postId,
+      },
+      include: {
+        comments: true,
+      },
+    });
+
+    if (!post) {
+      throw new HttpError(HttpStatus.NOT_FOUND, 'Post not found');
+    }
+
+    if (post.comments.length === 0) {
+      await db.post.delete({
+        where: {
+          id: postId,
+        },
+      });
+      return;
+    }
+
+    await Promise.all(
+      post.comments.map((comment) => {
+        return db.comment.delete({
+          where: {
+            id: comment.id,
+          },
+        });
+      }),
+    );
+
+    await db.post.delete({
+      where: {
+        id: postId,
+      },
+    });
   }
 }
 

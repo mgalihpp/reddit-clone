@@ -1,7 +1,9 @@
-import { db } from '@/configs/db';
-import type { CommentPayload, commentVotePayload } from '@/types/comment';
-import type { PostPayloadById } from '@/types/post';
-import { exclude } from '@/utils';
+import HttpStatus from 'http-status-codes';
+import { HttpError } from './../middlewares/error-handlers';
+import { db } from './../configs/db';
+import type { CommentPayload, commentVotePayload } from './../types/comment';
+import type { PostPayloadById } from './../types/post';
+import { exclude } from './../utils';
 import type { Request } from 'express';
 
 class CommentService {
@@ -88,6 +90,22 @@ class CommentService {
         type: voteType,
         userId: req.user?.id as string,
         commentId,
+      },
+    });
+  }
+
+  async deleteComment(commentId: string) {
+    const comment = await db.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+    });
+
+    if (!comment) throw new HttpError(HttpStatus.NOT_FOUND, 'Comment not found');
+
+    await db.comment.delete({
+      where: {
+        id: commentId,
       },
     });
   }

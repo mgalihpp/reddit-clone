@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import NotFound from '@/not-found';
 import { SubredditService } from '@/services/subredditServices';
 import { useQuery } from '@tanstack/react-query';
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const Editor = React.lazy(() => import('@/components/editor'));
@@ -13,6 +13,8 @@ const CreatePost = () => {
   const { slug } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
+
+  const [uploadLoading, setUploadLoading] = useState(false);
 
   useEffect(() => {
     // Redirect if the slug contains encoded spaces ("%20")
@@ -56,12 +58,21 @@ const CreatePost = () => {
         {/* form */}
         {/* editor */}
         <Suspense fallback={<Loader />}>
-          <Editor subredditId={data?.subreddit.id} />
+          <Editor
+            subredditId={data?.subreddit.id}
+            uploadLoading={uploadLoading}
+            setUploadLoading={setUploadLoading}
+          />
         </Suspense>
         {/* editor */}
 
         <div className="flex w-full justify-end">
-          <Button className="w-full" type="submit" form="subreddit-post-form">
+          <Button
+            className="w-full"
+            type="submit"
+            form="subreddit-post-form"
+            disabled={uploadLoading}
+          >
             Post
           </Button>
         </div>

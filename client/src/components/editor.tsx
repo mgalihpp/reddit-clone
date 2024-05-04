@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import TextAreaAutoSize from 'react-textarea-autosize';
 import EditorJs from '@editorjs/editorjs';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { uploadFiles } from '@/utils/uploadthing';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -12,14 +12,21 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { PostService } from '@/services/postServices';
 import { useAppSelector } from '@/hooks';
 import { getToken } from '@/reducers/authReducer';
+import { useCursorWait } from '@/hooks/use-cursor-wait';
 
 type FormData = z.infer<typeof PostValidator>;
 
 interface EditorProps {
   subredditId: string;
+  uploadLoading: boolean;
+  setUploadLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Editor: React.FC<EditorProps> = ({ subredditId }) => {
+const Editor: React.FC<EditorProps> = ({
+  subredditId,
+  uploadLoading,
+  setUploadLoading,
+}) => {
   const [isMounted, setIsMounted] = useState(false);
   const token = useAppSelector(getToken);
 
@@ -30,7 +37,6 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
 
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pathname } = useLocation();
 
   const {
     register,
@@ -45,7 +51,7 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     },
   });
 
-  const { mutate: createPost } = useMutation({
+  const { mutate: createPost, isPending } = useMutation({
     mutationKey: ['create-post'],
     mutationFn: async ({
       title,
@@ -61,8 +67,7 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
     onError: () => {
       toast.error('Something went wrong!');
     },
-    onSuccess: () => {
-      const newPathname = pathname.split('/').slice(0, -1).join('/');
+    onSuccess: (data) => {
       toast.success('Post created!');
       queryClient.invalidateQueries({
         queryKey: ['posts'],
@@ -70,7 +75,10 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
       queryClient.invalidateQueries({
         queryKey: ['slug-subreddit', slug],
       });
-      navigate(newPathname);
+
+      const absolutePath = `/r/${slug}/post/${data.id}`;
+
+      navigate(`${absolutePath}`);
     },
   });
 
@@ -115,7 +123,14 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
+                    onUploadBegin: () => {
+                      setUploadLoading(true);
+                    },
                   });
+
+                  if (res.url) {
+                    setUploadLoading(false);
+                  }
 
                   return {
                     success: 1,
@@ -137,7 +152,15 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
                     headers: {
                       Authorization: `Bearer ${token}`,
                     },
+                    onUploadBegin: () => {
+                      setUploadLoading(true);
+                    },
                   });
+
+                  if (res.url) {
+                    setUploadLoading(false);
+                  }
+
                   return {
                     success: 1,
                     file: {
@@ -160,7 +183,9 @@ const Editor: React.FC<EditorProps> = ({ subredditId }) => {
         },
       });
     }
-  }, [token]);
+  }, [token, setUploadLoading]);
+
+  useCursorWait(uploadLoading || isPending);
 
   useEffect(() => {
     if (Object.keys(errors).length) {

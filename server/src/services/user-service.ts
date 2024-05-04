@@ -1,13 +1,13 @@
 import HttpStatus from 'http-status-codes';
-import jwtToken from '@/utils/auth';
+import jwtToken from './../utils/auth';
+import { db } from './../configs/db';
+import { redis } from './../configs/redis';
 import jwt from 'jsonwebtoken';
 import { User } from '@prisma/client';
-import { Request } from 'express';
-import { updateUserPayload } from '@/types/user';
-import { db } from '@/configs/db';
-import { redis } from '@/configs/redis';
-import { HttpError } from '@/middlewares/error-handlers';
-import { exclude } from '@/utils';
+import { updateUserPayload } from '../types/user';
+import type { Request } from 'express';
+import { exclude } from './../utils';
+import { HttpError } from './../middlewares/error-handlers';
 
 class UserService {
   verifyTokenAndGetUser(token: string): Promise<User> {
@@ -54,7 +54,6 @@ class UserService {
 
     return { user, posts: postAuthourWIthoutPassword };
   }
-
 
   async updateUser(req: Request, payload: updateUserPayload) {
     const { name, image, username } = payload;

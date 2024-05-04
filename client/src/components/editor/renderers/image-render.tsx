@@ -1,11 +1,19 @@
-function CustomImageRenderer({ data }: any) {
+interface ImageRendererProps {
+  data: {
+    file: {
+      url: string;
+    };
+  };
+}
+
+function CustomImageRenderer({ data }: ImageRendererProps) {
   const src = data.file.url;
 
   return (
-    <div className="relative w-full max-h-96">
+    <div className="relative max-h-96 w-full my-2">
       <img
         alt="image"
-        className="object-contain"
+        className="object-contain max-h-96"
         width="384px"
         height="384px"
         loading="lazy"

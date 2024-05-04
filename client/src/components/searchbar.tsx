@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Users } from 'lucide-react';
+import { SubredditAvatar } from './subreddit-avatar';
 
 interface SearchBarProps {}
 
@@ -76,8 +76,9 @@ const SearchBar: React.FC<SearchBarProps> = () => {
                   onClick={() => navigate(`/r/${subreddit.name}`)}
                   key={subreddit.id}
                   value={subreddit.name}
+                  className='gap-2'
                 >
-                  <Users className="mr-2 size-4" />
+                  <SubredditAvatar subbreddit={subreddit} className="size-4" />
                   <Link to={`/r/${subreddit.name}`}>r/{subreddit.name}</Link>
                 </CommandItem>
               ))}

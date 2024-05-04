@@ -7,17 +7,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserAvatar } from '@/components/user-avatar';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAppDispatch } from '@/hooks';
 import { resetState } from '@/reducers/authReducer';
+import { useSession } from '@/providers/SessionProvider';
 
 interface UserDropDownProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
   user: Pick<User, 'name' | 'image' | 'email'>;
 }
 
 const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
+  const session = useSession();
   const dispacth = useAppDispatch();
-  const navigate = useNavigate();
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
@@ -36,7 +37,7 @@ const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to="/feed">Feed</Link>
+          <Link to={`/user/${session?.username}`}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/r/create">Create Community</Link>
@@ -51,7 +52,7 @@ const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
             e.preventDefault();
             dispacth(resetState());
 
-            return navigate('/sign-in');
+            return (window.location.href = '/sign-in');
           }}
         >
           Logout

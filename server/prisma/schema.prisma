@@ -70,11 +70,13 @@ model User {
 }
 
 model Subreddit {
-  id        String   @id @default(cuid())
-  creatorId String?
-  name      String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  creatorId   String?
+  name        String   @unique
+  image       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
   posts       Post[]
@@ -117,7 +119,7 @@ model Comment {
   authorId  String
   postId    String
   replyToId String?
-  text      String
+  text      String   @db.VarChar(9999)
   createdAt DateTime @default(now())
 
   author User @relation(fields: [authorId], references: [id])

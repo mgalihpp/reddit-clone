@@ -100,4 +100,4 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
   );
 };
 
-export default React.memo(PostFeed);
+export default PostFeed;

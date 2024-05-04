@@ -3,11 +3,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const client = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: Infinity,
-    },
-  },
+  // defaultOptions: {
+  //   queries: {
+  //     staleTime: Infinity,
+  //   },
+  // },
 });
 
 export default function QueryProvider({

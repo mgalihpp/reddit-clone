@@ -79,4 +79,18 @@ export const PostService = {
       token.authorization(),
     );
   },
+
+  deletePost: async (postId: string) => {
+    return await apiInstance.delete(
+      `/api/posts/${postId}`,
+      token.authorization(),
+    );
+  },
+
+  deleteComment: async (commentId: string) => {
+    return await apiInstance.delete(
+      `/api/posts/comment/${commentId}`,
+      token.authorization(),
+    );
+  },
 };

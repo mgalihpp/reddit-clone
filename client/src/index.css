@@ -50,9 +50,8 @@
 }
 
 * {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
-
 
 .dark .ce-block--selected .ce-block__content,
 .dark .ce-inline-toolbar,
@@ -105,6 +104,10 @@
 .dark .ce-toolbar__settings-btn:hover {
   background-color: theme('colors.accent.DEFAULT');
   color: theme('colors.accent.foreground');
+}
+
+.cdx-notifies {
+  z-index: 11 !important;
 }
 
 .dark .cdx-notify--error {

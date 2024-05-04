@@ -1,9 +1,13 @@
 import type { Request } from 'express';
-import { db } from '@/configs/db';
-import type { subredditPayload, subscriptionPayload } from '@/types/subreddit';
-import { HttpError } from '@/middlewares/error-handlers';
+import { db } from './../configs/db';
+import type {
+  subredditPayload,
+  subscriptionPayload,
+  updateSubredditPayload,
+} from './../types/subreddit';
+import { HttpError } from './../middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
-import { exclude } from '@/utils';
+import { exclude } from './../utils';
 
 class SubredditService {
   async createSubreddit(req: Request, payload: subredditPayload): Promise<string> {
@@ -33,6 +37,26 @@ class SubredditService {
     return newSubreddit.name;
   }
 
+  async updateSubreddit(payload: updateSubredditPayload) {
+    const { id, image, description } = payload;
+
+    const subreddit = await db.subreddit.update({
+      where: {
+        id,
+      },
+      data: {
+        image,
+        description,
+      },
+    });
+
+    if (!subreddit) {
+      throw new HttpError(HttpStatus.NOT_FOUND, 'Subreddit not found');
+    }
+
+    return subreddit.name;
+  }
+
   async getAllSubreddit() {
     const subreddits = await db.subreddit.findMany();
 
@@ -53,6 +77,9 @@ class SubredditService {
             subreddit: true,
             votes: true,
             comments: true,
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },

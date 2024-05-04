@@ -2,6 +2,7 @@ import EditorOutput from '@/components/editor/EditorOutput';
 import Loader from '@/components/loader';
 import CommentSection from '@/components/post/comment-section';
 import FeedButton from '@/components/post/feed-btn';
+import PostOptions from '@/components/post/post-options';
 import { formatTimeToNow } from '@/lib/utils';
 import NotFound from '@/not-found';
 import { PostService } from '@/services/postServices';
@@ -9,7 +10,7 @@ import { dynamicTitle } from '@/utils/title';
 import { useDocumentTitle } from '@mantine/hooks';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const SinglePost = () => {
   const { id } = useParams();
@@ -47,14 +48,29 @@ const SinglePost = () => {
       <FeedButton />
       <div className="flex h-full flex-col items-center justify-between sm:flex-row sm:items-start">
         <div className="w-full flex-1 rounded-sm bg-white p-4 sm:w-0">
-          <p className="mt-1 max-h-40 truncate text-xs text-gray-500">
-            Posted by u/
-            {data.post?.author.username ?? data.cachedPost?.authorUsername}{' '}
-            {formatTimeToNow(
-              new Date(data.post?.createdAt ?? data.cachedPost?.createdAt),
-            )}
-          </p>
-          <h1 className="py-2 text-xl font-semibold leading-6 text-gray-900">
+          <div className='w-full flex justify-between'>
+            <p className="mt-1 max-h-40 truncate text-xs w-fit text-gray-500">
+              Posted by{' '}
+              <Link
+                to={`/user/${data.post?.author.username}`}
+                className="underline"
+              >
+                u/
+                {data.post?.author.username ??
+                  data.cachedPost?.authorUsername}{' '}
+              </Link>
+              {formatTimeToNow(
+                new Date(data.post?.createdAt ?? data.cachedPost?.createdAt),
+              )}
+            </p>
+
+            <PostOptions
+              postId={data.post.id}
+              authorId={data.post.authorId}
+              refetch={refetch}
+            />
+          </div>
+          <h1 className="py-2 text-2xl font-semibold leading-6 text-gray-900 max-md:text-xl">
             {data.post?.title ?? data.cachedPost?.title}
           </h1>
 

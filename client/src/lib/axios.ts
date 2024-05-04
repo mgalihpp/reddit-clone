@@ -3,8 +3,8 @@ import axios from 'axios';
 export const apiInstance = axios.create({
   baseURL:
     process.env.NODE_ENV === 'development'
-      ? import.meta.env.VITE_SERVER_URL
-      : 'https://reddit-clone-server-umber.vercel.app',
+      ? 'http://localhost:5000'
+      : import.meta.env.VITE_SERVER_URL,
   headers: {
     'Content-Type': 'application/json',
   },

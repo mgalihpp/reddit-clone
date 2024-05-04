@@ -2,9 +2,10 @@ import { SubredditService } from '@/services/subredditServices';
 import { useQuery } from '@tanstack/react-query';
 import { Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Loader from '@/components/loader';
 import { cn } from '@/lib/utils';
-import { buttonVariants } from './ui/button';
+import { buttonVariants } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { SubredditAvatar } from '@/components/subreddit-avatar';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -24,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
 
   return (
     <div
-      className={`fixed z-10 top-16 flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out max-md:min-w-[300px] xl:min-w-[270px] ${
+      className={`fixed top-16 z-10 flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out max-md:min-w-[300px] xl:min-w-[270px] ${
         sidebarOpen
           ? 'translate-x-0 fade-in-5'
           : 'w-[-1px] -translate-x-full opacity-0 fade-out-0'
@@ -52,7 +53,7 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
           </li>
 
           {isLoading ? (
-            <Loader />
+            <Skeleton className="p-5" />
           ) : !subbredits ? (
             <></>
           ) : (
@@ -82,12 +83,13 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
                       <Link
                         to={`/r/${sub.name}`}
                         className={cn(
-                          'block rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700',
+                          'inline-flex w-full gap-4 items-center rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700',
                           {
                             'bg-gray-100': pathname === `/r/${sub.name}`,
                           },
                         )}
                       >
+                        <SubredditAvatar subbreddit={sub} className='size-6' />
                         r/{sub.name}
                       </Link>
                     </li>
@@ -103,7 +105,10 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
 
       <Link
         to="/sign-in"
-        className={buttonVariants({ className: 'hidden text-center mx-4 max-md:block sticky inset-x-0 bottom-5' })}
+        className={buttonVariants({
+          className:
+            'sticky inset-x-0 bottom-5 mx-4 hidden text-center max-md:block',
+        })}
       >
         Sign in
       </Link>

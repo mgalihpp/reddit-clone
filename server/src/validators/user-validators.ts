@@ -6,7 +6,7 @@ class UserValidator {
 
   constructor() {
     this.updateUserPayloadValidationRules = [
-      check('name').isString().isLength({ min: 3, max: 21 }),
+      check('name').isString().isLength({ min: 3, max: 50 }),
       check('username').isString().optional(),
       check('image').isString().optional(),
     ];

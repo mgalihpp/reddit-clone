@@ -1,8 +1,8 @@
-import { db } from '@configs/db';
+import { db } from './../configs/db';
 import type { Account, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
-import jwtToken from '@/utils/auth';
-import { HttpError } from '@middlewares/error-handlers';
+import jwtToken from './../utils/auth';
+import { HttpError } from './../middlewares/error-handlers';
 import HttpStatus from 'http-status-codes';
 
 class AuthService {

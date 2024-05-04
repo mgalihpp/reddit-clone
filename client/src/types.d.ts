@@ -30,6 +30,8 @@ type Post = {
 type Subreddit = {
   id: string;
   creatorId: string | null;
+  image?: string;
+  description?: string
   name: string;
   createdAt: Date;
   updatedAt: Date;

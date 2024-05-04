@@ -10,9 +10,12 @@ import { useOnClickOutside } from '@/hooks/use-on-click-outside';
 import { Button } from '@/components/ui/button';
 import { MessageSquare } from 'lucide-react';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '../ui/textarea';
+import { Textarea } from '@/components/ui/textarea';
 import React from 'react';
 import CommentContent from './comment-content';
+import { Link } from 'react-router-dom';
+import CommentOptions from './comment-options';
+import { useCursorWait } from '@/hooks/use-cursor-wait';
 
 type ExtendedComment = Comments & {
   votes: CommentVote[];
@@ -64,15 +67,20 @@ const PostComment: React.FC<PostCommentProps> = ({
     },
   });
 
+  useCursorWait(isPending);
+
   return (
     <div className="flex flex-col">
-      <div className="flex items-center">
+      <Link
+        to={`/user/${comment.author.username}`}
+        className="flex w-fit items-center"
+      >
         <UserAvatar
           user={{
             name: comment.author.name || null,
             image: comment.author.image || null,
           }}
-          className="size-6"
+          className="size-7"
         />
         <div className="ml-2 flex items-center gap-x-2">
           <p className="text-sm font-medium text-gray-900">
@@ -82,11 +90,11 @@ const PostComment: React.FC<PostCommentProps> = ({
             {formatTimeToNow(new Date(comment.createdAt))}
           </p>
         </div>
-      </div>
+      </Link>
 
       <CommentContent text={comment.text} />
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <CommentVotes
           commentId={comment.id}
           votesAmt={votesAmt}
@@ -103,6 +111,12 @@ const PostComment: React.FC<PostCommentProps> = ({
           <MessageSquare className="mr-1.5 size-4" />
           Reply
         </Button>
+
+        <CommentOptions
+          commentId={comment.id}
+          authorId={comment.author.id}
+          refetch={refetch}
+        />
       </div>
 
       {isReplying && (
@@ -134,6 +148,7 @@ const PostComment: React.FC<PostCommentProps> = ({
               </Button>
               <Button
                 isLoading={isPending}
+                disabled={isPending}
                 onClick={() => {
                   if (!input) return;
                   createComment({

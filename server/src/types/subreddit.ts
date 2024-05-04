@@ -5,3 +5,9 @@ export type subredditPayload = {
 export type subscriptionPayload = {
   subredditId: string;
 };
+
+export type updateSubredditPayload = {
+  id: string;
+  image?: string;
+  description?: string;
+};

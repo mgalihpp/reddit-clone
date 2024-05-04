@@ -1,6 +1,6 @@
-import commentService from '@services/comment-service';
-import type { CommentPayload } from '@/types/comment';
-import commentValidators from '@validators/comment-validators';
+import commentService from './../services/comment-service';
+import type { CommentPayload } from './../types/comment';
+import commentValidators from './../validators/comment-validators';
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import HttpStatus from 'http-status-codes';
@@ -51,6 +51,18 @@ class CommentController {
     // If validation passes, proceed with comment logic
     try {
       await commentService.voteComment(req, votePayload);
+
+      return res.status(HttpStatus.OK).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteComment(req: Request, res: Response, next: NextFunction) {
+    const { commentId } = req.params;
+
+    try {
+      await commentService.deleteComment(commentId);
 
       return res.status(HttpStatus.OK).json();
     } catch (error) {

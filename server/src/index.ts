@@ -2,14 +2,14 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import cors from 'cors';
 import path from 'path';
 import dotenv from 'dotenv';
-import indexRouter from '@routes/index-routes';
-import authRouter from '@routes/auth-routes';
-import userRouter from '@routes/user-routes';
-import postRouter from '@routes/post-routes';
-import subredditRouter from '@routes/subreddit-routes';
-import { errorHandler } from '@middlewares/error-handlers';
+import indexRouter from './routes/index-routes';
+import authRouter from './routes/auth-routes';
+import userRouter from './routes/user-routes';
+import postRouter from './routes/post-routes';
+import subredditRouter from './routes/subreddit-routes';
+import { errorHandler } from './middlewares/error-handlers';
 import { createRouteHandler } from 'uploadthing/express';
-import { uploadRouter } from '@/utils/uploadthing';
+import { uploadRouter } from './utils/uploadthing';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -33,16 +33,26 @@ const loggerMiddleware = (req: Request, res: Response, next: NextFunction) => {
 const app = express();
 
 // Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: 'http://localhost:4173',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
   }),
 );
+
+// Uploadthing
+app.use(
+  '/api/uploadthing',
+  createRouteHandler({
+    router: uploadRouter,
+    config: {
+      isDev: true, // this must be false in production
+    },
+  }),
+);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(loggerMiddleware);
 
 // Routes
 app.use('/', indexRouter);
@@ -50,17 +60,9 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
 app.use('/api/subreddit', subredditRouter);
-app.use(
-  '/api/uploadthing',
-  createRouteHandler({
-    router: uploadRouter,
-    config: {
-      isDev: true,
-    },
-  }),
-);
 
 // Error handling middleware
 app.use(errorHandler);
+app.use(loggerMiddleware);
 
-export default app;
+app.listen(5000, () => console.log('Server started on port http://localhost:5000'));

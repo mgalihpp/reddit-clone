@@ -11,29 +11,33 @@ const UserOverView = () => {
   }>();
 
   return (
-    <div className="col-span-2">
-      {posts.map((post) => {
-        const votesAmt = post.votes.reduce((acc, vote) => {
-          if (vote.type === 'UP') return acc + 1;
-          if (vote.type === 'DOWN') return acc - 1;
-          return acc;
-        }, 0);
+    <div className="col-span-2 space-y-4">
+      {posts.length === 0 ? (
+        <>No overview from this user</>
+      ) : (
+        posts.map((post) => {
+          const votesAmt = post.votes.reduce((acc, vote) => {
+            if (vote.type === 'UP') return acc + 1;
+            if (vote.type === 'DOWN') return acc - 1;
+            return acc;
+          }, 0);
 
-        const currentVote = session
-          ? post.votes.find((vote) => vote.userId === session.id)
-          : undefined;
+          const currentVote = session
+            ? post.votes.find((vote) => vote.userId === session.id)
+            : undefined;
 
-        return (
-          <Post
-            key={post.id}
-            post={post}
-            commentAmt={post.comments.length}
-            votesAmt={votesAmt}
-            subredditName={post.subreddit.name}
-            currentVote={currentVote}
-          />
-        );
-      })}
+          return (
+            <Post
+              key={post.id}
+              post={post}
+              commentAmt={post.comments.length}
+              votesAmt={votesAmt}
+              subredditName={post.subreddit.name}
+              currentVote={currentVote}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
