@@ -16,6 +16,7 @@ import CommentContent from './comment-content';
 import { Link } from 'react-router-dom';
 import CommentOptions from './comment-options';
 import { useCursorWait } from '@/hooks/use-cursor-wait';
+import UserHover from '@/components/user-hover';
 
 type ExtendedComment = Comments & {
   votes: CommentVote[];
@@ -75,21 +76,23 @@ const PostComment: React.FC<PostCommentProps> = ({
         to={`/user/${comment.author.username}`}
         className="flex w-fit items-center"
       >
-        <UserAvatar
-          user={{
-            name: comment.author.name || null,
-            image: comment.author.image || null,
-          }}
-          className="size-7"
-        />
-        <div className="ml-2 flex items-center gap-x-2">
-          <p className="text-sm font-medium text-gray-900">
-            {comment.author.username}
-          </p>
-          <p className="max-h-40 truncate text-xs text-zinc-500">
-            {formatTimeToNow(new Date(comment.createdAt))}
-          </p>
-        </div>
+        <UserHover author={comment.author} customTrigger className='flex items-center no-underline gap-0'>
+          <UserAvatar
+            user={{
+              name: comment.author.name || null,
+              image: comment.author.image || null,
+            }}
+            className="size-7"
+          />
+          <div className="ml-2 flex items-center gap-x-2">
+            <p className="text-sm font-medium text-gray-900">
+              {comment.author.username}
+            </p>
+            <p className="max-h-40 truncate text-xs text-zinc-500">
+              {formatTimeToNow(new Date(comment.createdAt))}
+            </p>
+          </div>
+        </UserHover>
       </Link>
 
       <CommentContent text={comment.text} />

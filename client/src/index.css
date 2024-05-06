@@ -53,6 +53,11 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.styled-scrollbars{
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
 .dark .ce-block--selected .ce-block__content,
 .dark .ce-inline-toolbar,
 .dark .codex-editor--narrow .ce-toolbox,

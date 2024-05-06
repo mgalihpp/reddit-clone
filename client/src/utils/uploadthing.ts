@@ -5,7 +5,7 @@ import { generateReactHelpers } from '@uploadthing/react/hooks';
 export const { uploadFiles } = generateReactHelpers({
   url: `${
     process.env.NODE_ENV === 'development'
-      ? 'http://localhost:5000'
+      ? "http://localhost:5000"
       : import.meta.env.VITE_UPLOADTHING_URL
   }/api/uploadthing`,
 });

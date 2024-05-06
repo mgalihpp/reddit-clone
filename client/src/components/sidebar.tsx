@@ -1,11 +1,11 @@
 import { SubredditService } from '@/services/subredditServices';
 import { useQuery } from '@tanstack/react-query';
-import { Home } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { buttonVariants } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { SubredditAvatar } from '@/components/subreddit-avatar';
+import { sideBarLinks } from '@/constants/links';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -25,32 +25,34 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
 
   return (
     <div
-      className={`fixed top-16 z-10 flex h-screen max-w-52 transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out max-md:min-w-[300px] xl:min-w-[270px] ${
+      className={`fixed top-[63px] z-10 flex h-screen min-w-[272px] transform flex-col justify-between border-e bg-white transition-all delay-100 duration-300 ease-in-out ${
         sidebarOpen
           ? 'translate-x-0 fade-in-5'
           : 'w-[-1px] -translate-x-full opacity-0 fade-out-0'
       }`}
     >
-      <nav className="px-4 py-6">
+      <nav className="px-4">
         {/* <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
           Logo
         </span> */}
 
         <ul className="mt-6 space-y-1">
-          <li>
-            <Link
-              to="/home"
-              className={cn(
-                'flex flex-grow items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100',
-                {
-                  'bg-gray-100': pathname === '/home',
-                },
-              )}
-            >
-              <Home className="size-4 sm:size-6 " />
-              Home
-            </Link>
-          </li>
+          {sideBarLinks.map((link, index) => (
+            <li key={index}>
+              <Link
+                to={link.path}
+                className={cn(
+                  'flex flex-grow items-center gap-3 rounded-lg px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100',
+                  {
+                    'bg-gray-100': pathname === link.path,
+                  },
+                )}
+              >
+                <link.icon className="size-4 sm:size-5" />
+                {link.label}
+              </Link>
+            </li>
+          ))}
 
           {isLoading ? (
             <Skeleton className="p-5" />
@@ -83,13 +85,13 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, pathname }) => {
                       <Link
                         to={`/r/${sub.name}`}
                         className={cn(
-                          'inline-flex w-full gap-4 items-center rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700',
+                          'inline-flex w-full items-center gap-4 rounded-lg px-4 py-2 text-sm font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-700',
                           {
                             'bg-gray-100': pathname === `/r/${sub.name}`,
                           },
                         )}
                       >
-                        <SubredditAvatar subbreddit={sub} className='size-6' />
+                        <SubredditAvatar subbreddit={sub} className="size-6" />
                         r/{sub.name}
                       </Link>
                     </li>

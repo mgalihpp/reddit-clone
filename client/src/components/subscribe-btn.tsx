@@ -52,19 +52,23 @@ const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
 
   return isSubscribed ? (
     <Button
-      className="w-full mb-4 mt-1"
+      // className="w-full mb-4 mt-1 bg-transparent border-2 text-black rounded-full"
+      variant="outline"
+      className="rounded-full px-2"
+      size="xs"
       isLoading={isUnsubLoading}
       onClick={() => unsubscribe()}
     >
-      Leave community
+      Joined
     </Button>
   ) : (
     <Button
-      className="w-full mb-4 mt-1"
+      className="rounded-full bg-blue-900 hover:bg-blue-950 px-2"
+      size="xs"
       isLoading={isSubLoading}
       onClick={() => subscribe()}
     >
-      Join to post
+      Join
     </Button>
   );
 };

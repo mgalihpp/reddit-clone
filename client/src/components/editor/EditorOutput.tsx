@@ -13,7 +13,7 @@ interface EditorOutputProps {
 
 const renderers = {
   header: ({ data }: { data: { text: string } }) => (
-    <h2 className="text-lg font-medium">{data.text}</h2>
+    <h2 className="text-lg max-sm:text-sm font-medium">{data.text}</h2>
   ),
   image: CustomImageRenderer,
   code: CustomCodeRenderer,
@@ -31,12 +31,14 @@ const style = {
 
 const EditorOutput: FC<EditorOutputProps> = ({ content }) => {
   return (
-    <Output
-      style={style}
-      className="text-sm"
-      renderers={renderers}
-      data={content}
-    />
+    <div className="space-y-3">
+      <Output
+        style={style}
+        className="text-sm max-sm:text-xs"
+        renderers={renderers}
+        data={content}
+      />
+    </div>
   );
 };
 

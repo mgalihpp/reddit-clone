@@ -9,7 +9,7 @@ interface VideoRendererProps {
   };
 }
 
-const CustomVideoRenderer = ({ data }: VideoRendererProps) => {
+function CustomVideoRenderer({ data }: VideoRendererProps) {
   const src = data.file.url;
   const { pathname } = useLocation();
   const preloadValue = pathname.includes('/post') ? 'metadata' : 'none';
@@ -30,6 +30,6 @@ const CustomVideoRenderer = ({ data }: VideoRendererProps) => {
       }}
     />
   );
-};
+}
 
 export default CustomVideoRenderer;

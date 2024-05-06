@@ -37,7 +37,7 @@ const Table: React.FC<Tableprops> = ({ header, withHeadings, data }) => {
       <table className="min-w-full divide-y-2 divide-gray-200 bg-white text-center text-sm">
         {withHeadings && (
           <thead>
-            <tr>
+            <tr className='bg-gray-200'>
               {header.map((item, index) => (
                 <th
                   key={index}

@@ -84,12 +84,12 @@ const Editor: React.FC<EditorProps> = ({
 
   const initializeEditor = useCallback(async () => {
     const EditorJS = (await import('@editorjs/editorjs')).default;
-    const Header = (await import('@editorjs/header')).default;
+    const Header = (await import('@editorjs/header')).default as never;
     const Embed = (await import('@editorjs/embed')).default;
     const Table = (await import('@editorjs/table')).default;
     const List = (await import('@editorjs/list')).default;
     const Code = (await import('@editorjs/code')).default;
-    const LinkTool = (await import('@editorjs/link')).default;
+    // const LinkTool = (await import('@editorjs/link')).default;
     const InlineCode = (await import('@editorjs/inline-code')).default;
     const ImageTool = (await import('@editorjs/image')).default;
     const VideoTool = (await import('@weekwood/editorjs-video')).default;
@@ -106,13 +106,20 @@ const Editor: React.FC<EditorProps> = ({
           blocks: [],
         },
         tools: {
-          header: Header,
-          linkTool: {
-            class: LinkTool,
+          header: {
+            class: Header,
             config: {
-              endpoint: '/api/link',
+              placeholder: 'Header',
+              levels: [2],
+              defaultLevel: 2,
             },
           },
+          // linkTool: {
+          //   class: LinkTool,
+          //   config: {
+          //     endpoint: '/api/link',
+          //   },
+          // },
           image: {
             class: ImageTool,
             config: {

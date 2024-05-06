@@ -3,3 +3,10 @@ export type updateSubredditPayload = {
   image?: string;
   description?: string;
 };
+
+export interface SubredditWithSubscription extends Subreddit {
+  subscribers: {
+    userId: string;
+    subredditId: string;
+  }[];
+}

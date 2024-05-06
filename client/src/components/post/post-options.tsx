@@ -60,7 +60,7 @@ const PostOptions: React.FC<PostOptionsProps> = ({
             <Flag className="size-5" />
             Report
           </DropdownMenuItem>
-          {session?.id === authorId && (
+          {session?.id === authorId || session?.username === authorId && (
             <DropdownMenuItem
               className="flex w-full items-center gap-3 px-4 py-3"
               onClick={() => {

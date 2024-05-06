@@ -58,6 +58,8 @@ model User {
   username      String?   @unique
   image         String?
   password      String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
 
   createdSubreddits Subreddit[]    @relation("CreatedBy")
   subscriptions     Subscription[]
@@ -74,7 +76,7 @@ model Subreddit {
   creatorId   String?
   name        String   @unique
   image       String?
-  description String?
+  description String?  @db.VarChar(500)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

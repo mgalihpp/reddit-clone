@@ -6,6 +6,8 @@ type User = {
   username: string | null;
   image: string | null;
   password: string | null;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type newUser = Omit<User, 'id' | 'username' | 'image' | 'emailVerified'>;
@@ -31,7 +33,7 @@ type Subreddit = {
   id: string;
   creatorId: string | null;
   image?: string;
-  description?: string
+  description?: string;
   name: string;
   createdAt: Date;
   updatedAt: Date;

@@ -64,11 +64,17 @@ class PostController {
     }
     // If validation passes, proceed with post logic
     try {
-      const { postAuthourWIthoutPassword: post, cachedPost } =
-        await postService.getPostById(params);
+      const {
+        postAuthourWIthoutPassword: post,
+        cachedPost,
+        subreddit,
+        votesAmt,
+      } = await postService.getPostById(params);
       const comments = await commentService.getCommentsByPostId(params);
 
-      return res.status(HttpStatus.OK).json({ post, cachedPost, comments });
+      return res
+        .status(HttpStatus.OK)
+        .json({ post, cachedPost, comments, subreddit, votesAmt });
     } catch (error) {
       next(error);
     }

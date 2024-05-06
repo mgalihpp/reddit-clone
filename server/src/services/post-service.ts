@@ -144,6 +144,25 @@ class PostService {
   async getPostById(payload: PostPayloadById) {
     const cachedPost = (await redis.hgetall(`post:${payload.postId}`)) as CachedPost;
 
+    const subreddit = await db.subreddit.findFirst({
+      where: {
+        posts: {
+          some: {
+            id: payload.postId,
+          },
+        },
+      },
+      include: {
+        subscribers: true,
+      },
+    });
+
+    const votesAmt = await db.vote.findMany({
+      where: {
+        postId: payload.postId,
+      },
+    });
+
     let post: PostVoteAuthor | null = null;
 
     if (!cachedPost) {
@@ -172,10 +191,10 @@ class PostService {
         ...post,
         author: AuthorWithoutPassword,
       };
-      return { postAuthourWIthoutPassword, cachedPost };
+      return { postAuthourWIthoutPassword, cachedPost, subreddit, votesAmt };
     }
 
-    return { post, cachedPost };
+    return { post, cachedPost, subreddit, votesAmt };
   }
 
   async createPost(req: Request, payload: CreatePostPayload) {
@@ -233,6 +252,8 @@ class PostService {
       return new Response('Post not found', { status: 404 });
     }
 
+    const postAuthorWithoutPassword = exclude(post.author, ['email', 'password'] as never[]);
+
     if (existingVote) {
       // if vote type is the same as existing vote, delete the vote
       if (existingVote.type === voteType) {
@@ -255,10 +276,12 @@ class PostService {
         if (votesAmt >= CACHE_AFTER_UPVOTES) {
           const cachePayload: CachedPost = {
             authorUsername: post.author.username ?? '',
+            author: postAuthorWithoutPassword,
             content: JSON.stringify(post.content),
             id: post.id,
             title: post.title,
             currentVote: null,
+
             createdAt: post.createdAt,
           };
 
@@ -291,6 +314,7 @@ class PostService {
       if (votesAmt >= CACHE_AFTER_UPVOTES) {
         const cachePayload: CachedPost = {
           authorUsername: post.author.username ?? '',
+          author: postAuthorWithoutPassword,
           content: JSON.stringify(post.content),
           id: post.id,
           title: post.title,
@@ -323,6 +347,7 @@ class PostService {
     if (votesAmt >= CACHE_AFTER_UPVOTES) {
       const cachePayload: CachedPost = {
         authorUsername: post.author.username ?? '',
+        author: postAuthorWithoutPassword,
         content: JSON.stringify(post.content),
         id: post.id,
         title: post.title,

@@ -22,7 +22,7 @@ function App() {
     <>
       <h1 className="text-3xl font-bold md:text-4xl">Your feed</h1>
 
-      <div className="grid grid-cols-1 gap-y-4 py-6 md:grid-cols-3 md:gap-x-4">
+      <div className="grid grid-cols-1 gap-y-4 py-6 lg:grid-cols-3 lg:gap-x-4">
         {/* session component */}
         {session ? (
           <Suspense fallback={<Loader />}>
@@ -37,7 +37,7 @@ function App() {
 
         {/* subreddit info */}
 
-        <div className="boder-gray-200 order-first h-fit overflow-hidden rounded-lg border md:col-end-4 md:order-last">
+        <div className="top-20 order-first h-fit rounded-lg border max-sm:px-2 sm:hidden lg:sticky lg:order-last lg:block">
           <div className="bg-emerald-100 px-6 py-4">
             <p className="flex items-center gap-1.5 py-3 font-semibold">
               <HomeIcon className="size-5" />

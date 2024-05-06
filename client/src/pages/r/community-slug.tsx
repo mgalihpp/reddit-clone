@@ -4,32 +4,29 @@ import NotFound from '@/not-found';
 import { SubredditService } from '@/services/subredditServices';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import FeedButton from '@/components/post/feed-btn';
 import { format } from 'date-fns';
 import { useSession } from '@/providers/SessionProvider';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import SubscribeBtn from '@/components/subscribe-btn';
-import MiniCreatePost from '@/components/post/mini-create-post';
 import PostFeed from '@/components/post/post-feed';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { SubredditAvatar } from '@/components/subreddit-avatar';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { updateSubredditPayload } from '@/types/subreddit';
 import { toast } from 'react-toastify';
 import { uploadFiles } from '@/utils/uploadthing';
-import { Separator } from '@/components/ui/separator';
-import { Textarea } from '@/components/ui/textarea';
 import { useCursorWait } from '@/hooks/use-cursor-wait';
 import { useDocumentTitle } from '@mantine/hooks';
 import { dynamicTitle } from '@/utils/title';
+import { formatReadableCount } from '@/lib/utils';
+import { Ellipsis, Plus, SquareArrowOutUpRight } from 'lucide-react';
+import EditSubreddit from '@/components/edit-subreddit';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Separator } from '@/components/ui/separator';
 
 const CommunitySlugPage = () => {
   const session = useSession();
@@ -37,6 +34,7 @@ const CommunitySlugPage = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  const [dropDownOpen, setDropDownOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [description, setDescription] = useState<string | undefined>('');
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -84,10 +82,10 @@ const CommunitySlugPage = () => {
   });
 
   useEffect(() => {
-    if (data?.subreddit.description) {
+    if (slug) {
       setDescription(data?.subreddit.description);
     }
-  }, [data?.subreddit.description]);
+  }, [data?.subreddit, slug]);
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -114,6 +112,7 @@ const CommunitySlugPage = () => {
 
       toast.success('Image uploaded!');
       setUploadLoading(false);
+      setDescription('');
     } catch (err) {
       console.error(err);
       toast.error(
@@ -126,28 +125,85 @@ const CommunitySlugPage = () => {
   useDocumentTitle(dynamicTitle(`r/${data?.subreddit.name ?? ''}`));
   useCursorWait(isPending || uploadLoading);
 
+  console.log(dropDownOpen, dialogOpen);
+
   return isLoading ? (
     <Loader container />
   ) : !data ? (
     <NotFound />
   ) : (
     <div>
-      <FeedButton />
+      {/* <FeedButton /> */}
 
-      <div className="grid grid-cols-1 gap-y-4 py-6 md:grid-cols-3 md:gap-x-4">
+      <div className="flex items-center justify-between gap-4 pb-4 max-sm:hidden">
+        <div className="flex items-center gap-4">
+          <SubredditAvatar subbreddit={data.subreddit} className="size-12" />
+          <h1 className="h-14 text-3xl font-bold leading-normal md:text-4xl md:leading-normal">
+            r/{data.subreddit.name}
+          </h1>
+        </div>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="outline"
+            className="w-full gap-2 rounded-full"
+            size="xs"
+            disabled={!data.isSubcribed}
+            onClick={() => {
+              navigate(`/r/${slug}/submit`);
+            }}
+          >
+            <Plus className="size-4" />
+            Create Post
+          </Button>
+
+          {data.subreddit.creatorId !== session?.id ? (
+            <SubscribeBtn
+              isSubscribed={data.isSubcribed}
+              subredditId={data.subreddit.id}
+              subredditName={data.subreddit.name}
+              refetch={refetch}
+            />
+          ) : null}
+
+          <EditSubreddit
+            isSubcribed={data.isSubcribed}
+            dialogOpen={dialogOpen}
+            setDialogOpen={setDialogOpen}
+            uploadLoading={uploadLoading}
+            progress={progress}
+            subreddit={data.subreddit}
+            setDescription={setDescription}
+            description={description}
+            updateSubreddit={updateSubreddit}
+            isPending={isPending}
+            handleImageChange={handleImageChange}
+          />
+
+          <DropdownMenu open={dropDownOpen} onOpenChange={setDropDownOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="rounded-full" size="xs">
+                <Ellipsis className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="mr-2">
+              <DropdownMenuGroup className="text-lg">
+                <DropdownMenuItem className="flex w-full items-center gap-3 px-4 py-3">
+                  Add to Favorites
+                </DropdownMenuItem>
+                <DropdownMenuItem className="flex w-full items-center gap-3 px-4 py-3">
+                  Mute r/{data.subreddit.name}
+                </DropdownMenuItem>
+              </DropdownMenuGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+
+      <div className="grid h-full grid-cols-1 gap-y-4 pb-6 md:gap-x-4 lg:grid-cols-3">
         <ul className="col-span-2 flex flex-col space-y-6">
           {/* {children} */}
           <>
-            <div className="flex items-center gap-4">
-              <SubredditAvatar
-                subbreddit={data.subreddit}
-                className="size-12"
-              />
-              <h1 className="h-14 text-3xl font-bold leading-normal md:text-4xl md:leading-normal">
-                r/{data.subreddit.name}
-              </h1>
-            </div>
-            <MiniCreatePost session={session} />
+            {/* <MiniCreatePost session={session} /> */}
             {isLoading ? (
               <Loader />
             ) : data.subreddit.posts.length === 0 ? (
@@ -165,148 +221,104 @@ const CommunitySlugPage = () => {
         </ul>
 
         {/* info sidebar */}
-        <div className="order-first h-fit overflow-hidden rounded-lg border border-gray-200 md:order-last">
-          <div className="px-8 py-4">
-            <p className="py-3 font-semibold">About r/{data.subreddit.name}</p>
-            <p className="text-xs">{data.subreddit?.description}</p>
-          </div>
-          <dl className="divide-y divide-gray-100 bg-white px-6 py-4 text-sm leading-6">
-            <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Created</dt>
-              <dd className="text-gray-700">
-                <time
-                  dateTime={new Date(data.subreddit.createdAt).toDateString()}
-                >
-                  {format(data.subreddit.createdAt, 'MMMM d, yyyy')}
-                </time>
-              </dd>
-            </div>
-            <div className="flex justify-between gap-x-4 py-3">
-              <dt className="text-gray-500">Members</dt>
-              <dd className="flex items-start gap-x-2">
-                <div className="text-gray-900">{data.memberCount}</div>
-              </dd>
-            </div>
-            {data.subreddit.creatorId === session?.id ? (
-              <div className="flex justify-between gap-x-4 py-3">
-                <dt className="text-gray-500">You created this community</dt>
-              </div>
-            ) : null}
-
-            {data.subreddit.creatorId !== session?.id ? (
-              <SubscribeBtn
-                isSubscribed={data.isSubcribed}
-                subredditId={data.subreddit.id}
-                subredditName={data.subreddit.name}
-                refetch={refetch}
+        <aside className="top-20 order-first h-fit rounded-lg border max-sm:px-2 sm:hidden lg:sticky lg:order-last lg:block">
+          <div className="space-y-2 px-8 py-4 max-sm:px-0">
+            <div className="flex items-center gap-2">
+              <SubredditAvatar
+                subbreddit={data.subreddit}
+                className="hidden max-sm:block"
               />
-            ) : null}
-
-            <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-              <DialogTrigger
-                className={buttonVariants({
-                  variant: 'subtle',
-                  className: 'mb-2 w-full',
-                })}
-              >
-                Edit subreddit
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Edit r/{data.subreddit.name}</DialogTitle>
-                  <DialogDescription>
-                    You can edit your subreddit here
-                  </DialogDescription>
-                </DialogHeader>
-                <div>
-                  <div className="flex flex-col">
-                    <div className="flex items-center gap-4">
-                      <SubredditAvatar
-                        subbreddit={data.subreddit}
-                        className="size-10"
-                      />
-                      <div className="flex flex-col gap-2">
-                        {uploadLoading ? (
-                          <p className="text-xs">
-                            Uploading... {progress.toFixed(2)}%
-                          </p>
-                        ) : (
-                          <Label
-                            className={buttonVariants({
-                              variant: 'outline',
-                              size: 'xs',
-                            })}
-                            htmlFor="image"
-                          >
-                            Change Profile
-                          </Label>
-                        )}
-                        <span className="text-[10px]">* Max file size 5mb</span>
-                      </div>
-                      <Input
-                        type="file"
-                        id="image"
-                        className="hidden"
-                        accept={'.jpg, .jpeg, .png, .webp'}
-                        onChange={handleImageChange}
-                      />
+              <div className="flex w-full flex-col space-y-2">
+                <p className="font-semibold">About r/{data.subreddit.name}</p>
+                <div className="flex w-full items-center gap-2 sm:justify-between">
+                  <p className="text-xs sm:text-sm sm:font-semibold">
+                    {formatReadableCount(data.memberCount)}{' '}
+                    <br className="max-sm:hidden" />{' '}
+                    <span className="sm:font-normal">members</span>
+                  </p>
+                  <div className="flex max-sm:inline-flex max-sm:items-center sm:flex-col">
+                    <span className="font-semibold max-sm:hidden">
+                      {formatReadableCount(1000)}
+                    </span>
+                    <div className="flex items-center gap-2 text-xs">
+                      <span className="inline-flex size-2 rounded-full bg-emerald-400"></span>
+                      <span className="max-sm:hidden">Online</span>
                     </div>
-
-                    <Separator className="my-2" />
-
-                    <div className="space-y-4">
-                      <Label htmlFor="description">Description</Label>
-                      <Textarea
-                        id="description"
-                        value={description}
-                        rows={1}
-                        placeholder="(optional)"
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-
-                      <Button
-                        type="button"
-                        onClick={() =>
-                          updateSubreddit(
-                            {
-                              id: data.subreddit.id as string,
-                              description,
-                            },
-                            {
-                              onSuccess: () => {
-                                setDialogOpen(false);
-                              },
-                            },
-                          )
-                        }
-                        isLoading={isPending}
-                        disabled={isPending}
-                      >
-                        Update
-                      </Button>
-                    </div>
+                    <p className="ml-1 text-xs sm:hidden">
+                      {formatReadableCount(1000)} Online
+                    </p>
+                  </div>
+                  <div className="flex flex-col max-sm:hidden">
+                    {/* <span className="inline-flex size-2 rounded-full bg-emerald-400"></span> */}
+                    <span className="text-sm font-semibold">Top 1%</span>
+                    <p className="inline-flex items-center gap-2 text-xs">
+                      Rank by size <SquareArrowOutUpRight className="size-2" />
+                    </p>
                   </div>
                 </div>
-              </DialogContent>
-            </Dialog>
-
-            <Button
-              variant="outline"
-              className="mb-4 w-full"
-              disabled={!data.isSubcribed}
-              onClick={() => {
-                navigate(`/r/${slug}/submit`);
-              }}
-            >
-              Create Post
-            </Button>
-            <div className="flex items-center justify-center gap-1">
-              <p className="text-[10px]">
-                You must subscribe to be able to create posts
-              </p>
+              </div>
             </div>
-          </dl>
-        </div>
+
+            <Separator className="my-2 max-sm:hidden" />
+
+            <p className="text-xs">{data.subreddit?.description}</p>
+
+            <p className="text-xs text-gray-500">
+              Created at{' '}
+              <time
+                dateTime={new Date(data.subreddit.createdAt).toDateString()}
+              >
+                {format(data.subreddit.createdAt, 'MMMM d, yyyy')}
+              </time>
+            </p>
+
+            <div className="flex items-center gap-4 md:hidden">
+              <Button
+                variant="outline"
+                className="gap-1 rounded-full text-xs"
+                size="xs"
+                disabled={!data.isSubcribed}
+                onClick={() => {
+                  navigate(`/r/${slug}/submit`);
+                }}
+              >
+                <Plus className="size-4" />
+                Create Post
+              </Button>
+
+              {data.subreddit.creatorId !== session?.id ? (
+                <SubscribeBtn
+                  isSubscribed={data.isSubcribed}
+                  subredditId={data.subreddit.id}
+                  subredditName={data.subreddit.name}
+                  refetch={refetch}
+                />
+              ) : null}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="rounded-full text-xs"
+                    size="xs"
+                  >
+                    <Ellipsis className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuGroup className="text-lg">
+                    <DropdownMenuItem className="flex w-full items-center gap-3 px-4 py-3">
+                      Add to Favorites
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="flex w-full items-center gap-3 px-4 py-3">
+                      Mute r/{data.subreddit.name}
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
+        </aside>
       </div>
     </div>
   );

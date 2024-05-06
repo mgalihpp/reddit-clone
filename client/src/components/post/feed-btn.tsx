@@ -1,8 +1,9 @@
-import { Link, useLocation } from 'react-router-dom';
-import { buttonVariants } from '../ui/button';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
 const FeedButton = () => {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   // if path is /r/mycom, turn into /
@@ -11,10 +12,14 @@ const FeedButton = () => {
   const subredditPath = getSubredditPath(pathname);
 
   return (
-    <Link to={subredditPath} className={buttonVariants({ variant: 'ghost' })}>
-      <ChevronLeft className="size-4 mr-1" />
-      {subredditPath === '/' ? 'Back Home' : 'Back to community'}
-    </Link>
+    <Button
+      onClick={() => navigate(subredditPath)}
+      variant="subtle"
+      className="rounded-full p-0 px-2 max-sm:hidden"
+    >
+      <ChevronLeft className="mr-1 size-6" />
+      {/* {subredditPath === '/' ? 'Back Home' : 'Back to community'} */}
+    </Button>
   );
 };
 

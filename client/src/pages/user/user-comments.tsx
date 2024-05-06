@@ -32,7 +32,7 @@ const UserComments = () => {
               post={post}
               commentAmt={post.comments.length}
               votesAmt={votesAmt}
-              subredditName={post.subreddit.name}
+              subreddit={post.subreddit}
               currentVote={currentVote}
             />
           );

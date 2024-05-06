@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from '../ui/button';
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, formatReadableCount } from '@/lib/utils';
 import { PostService } from '@/services/postServices';
 
 interface PostVoteProps {
@@ -55,57 +55,62 @@ const PostVote: React.FC<PostVoteProps> = ({
 
       return toast.error('Something went wrong!');
     },
-    onMutate: (type: VoteType) => {
+    onMutate: (type: 'UP' | 'DOWN') => {
       if (currentVote === type) {
         // User is voting the same way again, so remove their vote
         setCurrentVote(undefined);
         if (type === 'UP') setVotesAmt((prev) => prev - 1);
         else if (type === 'DOWN') setVotesAmt((prev) => prev + 1);
       } else {
-        // User is voting in the opposite direction, so subtract 2
+        // User is voting in the opposite direction, so subtract 1
         setCurrentVote(type);
-        if (type === 'UP') setVotesAmt((prev) => prev + (currentVote ? 2 : 1));
+        if (type === 'UP') setVotesAmt((prev) => prev + (currentVote ? 1 : 1));
         else if (type === 'DOWN')
-          setVotesAmt((prev) => prev - (currentVote ? 2 : 1));
+          setVotesAmt((prev) => prev - (currentVote ? 1 : 1));
       }
     },
   });
 
   return (
-    <div className="flex flex-col gap-4 pb-4 pr-6 sm:w-20 sm:gap-0 sm:pb-0">
+    <div className="flex h-fit items-center gap-1 rounded-full bg-gray-100 sm:w-fit sm:gap-2 sm:pb-0">
       {/* upvote */}
       <Button
         onClick={() => vote('UP')}
         size="sm"
         variant="ghost"
         aria-label="upvote"
+        className="group rounded-full bg-transparent focus:ring-0 focus:ring-transparent focus:ring-offset-0"
       >
         <ArrowBigUp
-          className={cn('h-5 w-5 text-zinc-700', {
-            'fill-emerald-500 text-emerald-500': currentVote === 'UP',
-          })}
+          className={cn(
+            'size-5 text-zinc-700 group-hover:text-emerald-500 max-sm:size-4',
+            {
+              'fill-emerald-500 text-emerald-500': currentVote === 'UP',
+            },
+          )}
         />
       </Button>
 
       {/* score */}
-      <p className="py-2 text-center text-sm font-medium text-zinc-900">
-        {votesAmt}
+      <p className="py-2 text-center text-xs font-medium text-zinc-900">
+        {formatReadableCount(votesAmt)}
       </p>
 
       {/* downvote */}
       <Button
         onClick={() => vote('DOWN')}
         size="sm"
-        className={cn({
-          'text-emerald-500': currentVote === 'DOWN',
-        })}
         variant="ghost"
         aria-label="downvote"
+        className="group rounded-full bg-transparent focus:ring-0 focus:ring-transparent focus:ring-offset-0"
       >
         <ArrowBigDown
-          className={cn('h-5 w-5 text-zinc-700', {
-            'fill-red-500 text-red-500': currentVote === 'DOWN',
-          })}
+          className={cn(
+            'size-5 text-zinc-700 group-hover:text-red-500 max-sm:size-4',
+            {
+              'fill-red-500 text-red-500': currentVote === 'DOWN',
+            },
+          )}
         />
       </Button>
     </div>

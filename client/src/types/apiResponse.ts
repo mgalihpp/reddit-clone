@@ -1,5 +1,6 @@
 import { ExtendedComment } from './comment';
 import type { CachedPost, ExtendedPost } from './post';
+import type { SubredditWithSubscription } from './subreddit';
 
 export type LoginResponse = {
   message: string;
@@ -23,6 +24,8 @@ export interface PostByIdResponse {
   post: Omit<ExtendedPost, 'comments' | 'subreddit'>;
   cachedPost: CachedPost;
   comments: ExtendedComment[];
+  subreddit: SubredditWithSubscription;
+  votesAmt: Vote[];
 }
 
 export type CreateSubredditResponse = string;
