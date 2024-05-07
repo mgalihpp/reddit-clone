@@ -8,6 +8,9 @@ import { Button } from '../ui/button';
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react';
 import { cn, formatReadableCount } from '@/lib/utils';
 import { PostService } from '@/services/postServices';
+import { useSession } from '@/providers/SessionProvider';
+import { useAppDispatch } from '@/hooks';
+import { setModalOpen } from '@/reducers/modalReducer';
 
 interface PostVoteProps {
   postId: string;
@@ -20,7 +23,8 @@ const PostVote: React.FC<PostVoteProps> = ({
   initialVotesAmt,
   initialVote,
 }) => {
-  //   const { loginToast } = useCustomToasts()
+  const session = useSession();
+  const dispatch = useAppDispatch();
   const [votesAmt, setVotesAmt] = useState<number>(initialVotesAmt);
   const [currentVote, setCurrentVote] = useState(initialVote);
   const prevVote = usePrevious(currentVote);
@@ -64,20 +68,26 @@ const PostVote: React.FC<PostVoteProps> = ({
       } else {
         // User is voting in the opposite direction, so subtract 1
         setCurrentVote(type);
-        if (type === 'UP') setVotesAmt((prev) => prev + (currentVote ? 1 : 1));
+        if (type === 'UP') setVotesAmt((prev) => prev + (currentVote ? 2 : 1));
         else if (type === 'DOWN')
-          setVotesAmt((prev) => prev - (currentVote ? 1 : 1));
+          setVotesAmt((prev) => prev - (currentVote ? 2 : 1));
       }
     },
   });
 
   return (
-    <div className="flex h-fit items-center gap-1 rounded-full bg-gray-100 sm:w-fit sm:gap-2 sm:pb-0">
+    <div className="flex h-fit items-center gap-1 rounded-full bg-zinc-200/50 sm:w-fit sm:gap-2 sm:pb-0">
       {/* upvote */}
       <Button
-        onClick={() => vote('UP')}
+        onClick={() => {
+          if (!session.user) {
+            dispatch(setModalOpen(true));
+            return toast.error('Please login to vote!');
+          }
+          vote('UP');
+        }}
         size="sm"
-        variant="ghost"
+        variant="subtle"
         aria-label="upvote"
         className="group rounded-full bg-transparent focus:ring-0 focus:ring-transparent focus:ring-offset-0"
       >
@@ -98,9 +108,15 @@ const PostVote: React.FC<PostVoteProps> = ({
 
       {/* downvote */}
       <Button
-        onClick={() => vote('DOWN')}
+        onClick={() => {
+          if (!session.user) {
+            dispatch(setModalOpen(true));
+            return toast.error('Please login to vote!');
+          }
+          vote('DOWN');
+        }}
         size="sm"
-        variant="ghost"
+        variant="subtle"
         aria-label="downvote"
         className="group rounded-full bg-transparent focus:ring-0 focus:ring-transparent focus:ring-offset-0"
       >

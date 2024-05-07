@@ -20,6 +20,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
 import { login, register } from '@/actions/authActions';
 import { useLocation } from 'react-router-dom';
+import { setModalOpen } from '@/reducers/modalReducer';
 
 interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -75,6 +76,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   const handleLogin = (input: z.infer<typeof loginFormSchema>) => {
     dispacth(login(input)).then((value) => {
       if (value.meta.requestStatus === 'fulfilled') {
+        dispacth(setModalOpen(false));
         toast.success(`Login Success!`);
       } else if (value.meta.requestStatus === 'rejected') {
         toast.error(`Invalid password or credentials!`);
@@ -85,6 +87,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   const handleRegister = (input: z.infer<typeof registerFormSchema>) => {
     dispacth(register(input)).then((value) => {
       if (value.meta.requestStatus === 'fulfilled') {
+        dispacth(setModalOpen(false));
         toast.success(`Register Success!`);
       } else if (value.meta.requestStatus === 'rejected') {
         toast.error(`Invalid credentials!`);

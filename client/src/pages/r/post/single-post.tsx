@@ -147,14 +147,14 @@ const SinglePost = () => {
                 }, 0)
               }
               initialVote={
-                data.post?.votes.find((vote) => vote?.userId === session?.id)
+                data.post?.votes.find((vote) => vote?.userId === session.user?.id)
                   ?.type ?? data.cachedPost?.currentVote
               }
             />
 
             <Link
               to={`/r/${slug}/post/${data?.post?.id ?? data.cachedPost?.id}`}
-              className="flex max-h-9 w-fit items-center gap-2 rounded-full bg-zinc-100 px-3 text-center text-xs font-medium text-zinc-900 hover:bg-zinc-200"
+              className="flex max-h-9 w-fit items-center gap-2 rounded-full bg-zinc-200/50 px-3 text-center text-xs font-medium text-zinc-900 hover:bg-zinc-200"
             >
               <MessageSquare className="size-4" />{' '}
               {formatReadableCount(data.comments.length)}
@@ -233,7 +233,7 @@ const SinglePost = () => {
                 size="xs"
                 disabled={
                   !data?.subreddit?.subscribers.find(
-                    ({ userId }) => userId === session?.id,
+                    ({ userId }) => userId === session.user?.id,
                   )
                 }
                 onClick={() => {
@@ -244,10 +244,10 @@ const SinglePost = () => {
                 Create Post
               </Button>
 
-              {data?.subreddit?.creatorId !== session?.id ? (
+              {data?.subreddit?.creatorId !== session.user?.id ? (
                 <SubscribeBtn
                   isSubscribed={data?.subreddit?.subscribers.some(
-                    ({ userId }) => userId === session?.id,
+                    ({ userId }) => userId === session.user?.id,
                   )}
                   subredditId={data?.subreddit.id}
                   subredditName={data?.subreddit.name}

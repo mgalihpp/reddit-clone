@@ -10,7 +10,19 @@ type User = {
   updatedAt: Date;
 };
 
-type newUser = Omit<User, 'id' | 'username' | 'image' | 'emailVerified'>;
+type Subscriptions = {
+  userId: string;
+  subredditId: string;
+};
+
+type UserWithSubscritions = User & {
+  subscriptions: Subscriptions[];
+};
+
+type newUser = Omit<
+  User,
+  'id' | 'username' | 'image' | 'emailVerified' | 'createdAt' | 'updatedAt'
+>;
 
 type Session = {
   token: string;
@@ -37,6 +49,7 @@ type Subreddit = {
   name: string;
   createdAt: Date;
   updatedAt: Date;
+  subscribers: Subscriptions[];
 };
 
 type VoteType = 'UP' | 'DOWN';
@@ -61,6 +74,12 @@ type CommentVote = {
   userId: string;
   commentId: string;
   type: VoteType;
+};
+
+type SortType = 'none' | 'top' | 'new' | 'liked';
+
+type FilterProps = {
+  sort: SortType;
 };
 
 declare module '@editorjs/embed';

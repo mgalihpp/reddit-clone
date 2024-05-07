@@ -26,17 +26,21 @@ export const UserService = {
     return session;
   },
 
-  useSession: (): User | null | undefined => {
+  useSession: (): {
+    user: UserWithSubscritions | null | undefined;
+    refetch: () => void;
+  } => {
     const dispatch = useAppDispatch();
     // fetching session
     const {
       data: user,
       isLoading,
       isFetching,
+      refetch,
     } = useQuery({
       queryKey: ['user-session'],
       queryFn: async () => {
-        const { data } = await apiInstance.get<User>(
+        const { data } = await apiInstance.get<UserWithSubscritions>(
           '/api/users',
           token.authorization(),
         );
@@ -49,10 +53,13 @@ export const UserService = {
     if (!isLoading && !isFetching && !user) {
       // Reset authentication state
       dispatch(resetState());
-      return null;
+      return { user: null, refetch };
     }
 
-    return user;
+    return {
+      user: user,
+      refetch: refetch,
+    };
   },
 
   useAuth: (): User | null => {

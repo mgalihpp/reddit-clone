@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* --background: 240 10% 3.9%; */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
@@ -26,7 +27,7 @@
     --radius: 0.5rem;
   }
 
-  /* .dark {
+  .dark {
       --background: 240 10% 3.9%;
       --foreground: 0 0% 98%;
       --card: 240 10% 3.9%;
@@ -46,16 +47,20 @@
       --border: 240 3.7% 15.9%;
       --input: 240 3.7% 15.9%;
       --ring: 240 4.9% 83.9%;
-    } */
+    }
 }
 
 * {
   font-family: 'Poppins', sans-serif;
 }
 
-.styled-scrollbars{
+.styled-scrollbars {
   scrollbar-width: thin;
-  scrollbar-color: transparent transparent;
+  /* scrollbar-color: transparent transparent; */
+  padding: 0;
+  margin: 0;
+
+  @apply border
 }
 
 .dark .ce-block--selected .ce-block__content,

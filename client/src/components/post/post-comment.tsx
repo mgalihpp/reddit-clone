@@ -17,6 +17,9 @@ import { Link } from 'react-router-dom';
 import CommentOptions from './comment-options';
 import { useCursorWait } from '@/hooks/use-cursor-wait';
 import UserHover from '@/components/user-hover';
+import { setModalOpen } from '@/reducers/modalReducer';
+import { useSession } from '@/providers/SessionProvider';
+import { useAppDispatch } from '@/hooks';
 
 type ExtendedComment = Comments & {
   votes: CommentVote[];
@@ -38,6 +41,8 @@ const PostComment: React.FC<PostCommentProps> = ({
   postId,
   refetch,
 }) => {
+  const session = useSession();
+  const dispatch = useAppDispatch();
   const [isReplying, setIsReplying] = useState<boolean>(false);
   const commentRef = useRef<HTMLDivElement>(null);
   const [input, setInput] = useState<string>(`@${comment.author.username} `);
@@ -76,7 +81,11 @@ const PostComment: React.FC<PostCommentProps> = ({
         to={`/user/${comment.author.username}`}
         className="flex w-fit items-center"
       >
-        <UserHover author={comment.author} customTrigger className='flex items-center no-underline gap-0'>
+        <UserHover
+          author={comment.author}
+          customTrigger
+          className="flex items-center gap-0 no-underline"
+        >
           <UserAvatar
             user={{
               name: comment.author.name || null,
@@ -154,6 +163,12 @@ const PostComment: React.FC<PostCommentProps> = ({
                 disabled={isPending}
                 onClick={() => {
                   if (!input) return;
+                  if (!session.user) {
+                    toast.error('Please login to post a comment');
+
+                    dispatch(setModalOpen(true));
+                    return;
+                  }
                   createComment({
                     postId,
                     text: input,

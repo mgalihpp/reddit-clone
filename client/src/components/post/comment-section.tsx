@@ -35,7 +35,7 @@ const CommentSection: React.FC<CommentsSectionProps> = ({
             );
 
             const topLevelCommentVote = topLevelComment.votes.find(
-              (vote) => vote.userId === session?.id,
+              (vote) => vote.userId === session.user?.id,
             );
 
             return (
@@ -61,7 +61,7 @@ const CommentSection: React.FC<CommentsSectionProps> = ({
                     }, 0);
 
                     const replyVote = reply.votes.find(
-                      (vote) => vote.userId === session?.id,
+                      (vote) => vote.userId === session.user?.id,
                     );
 
                     return (

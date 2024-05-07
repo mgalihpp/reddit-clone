@@ -1,22 +1,26 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import authReducer from "@/reducers/authReducer";
-import { persistReducer, persistStore } from "redux-persist";
-import storage from "redux-persist/lib/storage";
-import sessionStorage from "redux-persist/lib/storage/session";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import authReducer from '@/reducers/authReducer';
+import { persistReducer, persistStore } from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+import sessionStorage from 'redux-persist/lib/storage/session';
+import modalReducer from '@/reducers/modalReducer';
+import sidebarReducer from '@/reducers/sidebarReducer';
 
 // Define Redux Persist Configuration
 const rootPersistConfig = {
-  key: "root",
+  key: 'root',
   storage,
 };
 
 const userPersistConfig = {
-  key: "user",
+  key: 'user',
   storage: sessionStorage,
 };
 
 const rootReducer = combineReducers({
   auth: persistReducer(userPersistConfig, authReducer),
+  modal: modalReducer,
+  sidebar: sidebarReducer,
 });
 
 // Create a persisted reducer

@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/', authenticatedToken, subredditController.createSubreddit);
 router.put('/', authenticatedToken, subredditController.updateSubreddit);
 router.get('/', subredditController.getAllSubreddits);
-router.get('/slug', authenticatedToken, subredditController.getSlugSubreddit);
+router.post('/slug', subredditController.getSlugSubreddit);
 router.post('/subscribe', authenticatedToken, subredditController.subscribe);
 router.post('/unsubscribe', authenticatedToken, subredditController.unsubscribe);
 router.patch('/post/vote', authenticatedToken, postController.votePost);

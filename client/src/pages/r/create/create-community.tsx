@@ -73,7 +73,7 @@ const CreateCommunityPage = () => {
             isLoading={isPending}
             disabled={input.length === 0}
             onClick={() => {
-              if (!session) {
+              if (!session.user) {
                 toast.error('Please sign in to create a community');
                 navigate('/sign-in');
                 return;

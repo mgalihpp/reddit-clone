@@ -68,10 +68,16 @@ class SubredditController {
   }
 
   async getSlugSubreddit(req: Request, res: Response, next: NextFunction) {
-    const slugPayload = req.query as subredditPayload;
+    const slugPayload = req.query;
+    const { userId } = req.body;
+
+    const payload: subredditPayload = {
+      name: slugPayload.name as string,
+      userId,
+    };
     // Validate request body against defined validation rules
     await Promise.all(
-      subredditValidators.subredditPayloadValidationRules.map((validation) =>
+      subredditValidators.slugSubredditPayloadValidationRules.map((validation) =>
         validation.run(req),
       ),
     );
@@ -84,7 +90,7 @@ class SubredditController {
     // If validation passes, proceed with subreddit logic
     try {
       const { subreddit, isSubcribed, memberCount } =
-        await subredditService.getSlugSubreddit(req, slugPayload);
+        await subredditService.getSlugSubreddit(payload);
 
       return res.status(HttpStatus.OK).json({ subreddit, isSubcribed, memberCount });
     } catch (error) {

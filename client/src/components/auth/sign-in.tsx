@@ -3,8 +3,12 @@ import AuthForm from '@/components/auth/form';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useDocumentTitle } from '@mantine/hooks';
+import { dynamicTitle } from '@/utils/title';
 
 const SignIn = () => {
+  useDocumentTitle(dynamicTitle('Sign In'));
+
   useEffect(() => {
     try {
       const notify = localStorage.getItem('notify');

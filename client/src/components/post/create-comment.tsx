@@ -6,6 +6,9 @@ import { useMutation } from '@tanstack/react-query';
 import { CommentRequest } from '@/lib/validators/comment';
 import { PostService } from '@/services/postServices';
 import { toast } from 'react-toastify';
+import { useSession } from '@/providers/SessionProvider';
+import { setModalOpen } from '@/reducers/modalReducer';
+import { useAppDispatch } from '@/hooks';
 
 interface CreateCommentProps {
   postId: string;
@@ -18,6 +21,8 @@ const CreateComment: React.FC<CreateCommentProps> = ({
   replyToId,
   refetch,
 }) => {
+  const session = useSession();
+  const dispatch = useAppDispatch();
   const [input, setInput] = useState('');
 
   const { mutate: createComment, isPending } = useMutation({
@@ -58,7 +63,15 @@ const CreateComment: React.FC<CreateCommentProps> = ({
           <Button
             isLoading={isPending}
             disabled={input.length === 0}
-            onClick={() => createComment({ postId, text: input, replyToId })}
+            onClick={() => {
+              if (!session.user) {
+                toast.error('Please login to post a comment');
+
+                dispatch(setModalOpen(true));
+                return;
+              }
+              createComment({ postId, text: input, replyToId });
+            }}
           >
             Post
           </Button>

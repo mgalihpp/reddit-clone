@@ -15,8 +15,8 @@ const Loader = ({
     <div
       className={cn(
         'flex items-center justify-center',
-        { 'h-dvh': container },
-        { 'h-[calc(100dvh-8rem)]': container2 },
+        { 'h-[calc(100dvh-20rem)]': container },
+        { 'h-[calc(100dvh-20rem)]': container2 },
         className,
       )}
     >

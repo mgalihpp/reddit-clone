@@ -3,6 +3,9 @@ import { Button } from '@/components/ui/button';
 import { useMutation } from '@tanstack/react-query';
 import { SubredditService } from '@/services/subredditServices';
 import { toast } from 'react-toastify';
+import { useSession } from '@/providers/SessionProvider';
+import { setModalOpen } from '@/reducers/modalReducer';
+import { useAppDispatch } from '@/hooks';
 
 interface SubscribeBtnProps {
   isSubscribed: boolean;
@@ -17,6 +20,9 @@ const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
   subredditName,
   refetch,
 }) => {
+  const dispatch = useAppDispatch();
+  const session = useSession();
+
   const { mutate: subscribe, isPending: isSubLoading } = useMutation({
     mutationKey: ['subscribe'],
     mutationFn: async () => {
@@ -63,10 +69,18 @@ const SubscribeBtn: React.FC<SubscribeBtnProps> = ({
     </Button>
   ) : (
     <Button
-      className="rounded-full bg-blue-900 hover:bg-blue-950 px-2"
+      className="rounded-full bg-blue-900 px-2 hover:bg-blue-950"
       size="xs"
       isLoading={isSubLoading}
-      onClick={() => subscribe()}
+      onClick={() => {
+        if (!session.user) {
+          toast.error('Please login to able join a community');
+          dispatch(setModalOpen(true));
+          return;
+        }
+
+        subscribe();
+      }}
     >
       Join
     </Button>

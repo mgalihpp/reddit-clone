@@ -3,7 +3,7 @@ import userValidators from './../validators/user-validators';
 import type { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import HttpStatus from 'http-status-codes';
-import { HttpError } from './../middlewares/error-handlers';
+import { db } from './../configs/db';
 
 class UserController {
   async getUser(req: Request, res: Response, next: NextFunction) {
@@ -11,7 +11,18 @@ class UserController {
       // Create a new user object without the password field
       delete (req.user as any)?.password;
 
-      return res.status(HttpStatus.OK).json(req.user);
+      const subscriptions = await db.subscription.findMany({
+        where: {
+          userId: req.user?.id,
+        },
+      });
+
+      const user = {
+        ...req.user,
+        subscriptions
+      }
+
+      return res.status(HttpStatus.OK).json(user);
     } catch (error) {
       next(error);
     }

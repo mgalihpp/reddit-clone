@@ -6,6 +6,7 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
+import ModalProvider from '@/providers/ModalProvider';
 
 const Navbar = React.lazy(() => import('@/components/navbar/navbar'));
 const Sidebar = React.lazy(() => import('@/components/sidebar'));
@@ -25,12 +26,12 @@ export default function RootLayout() {
   }, [isMobile, pathname]);
 
   return (
-    <div className="light min-h-screen bg-slate-50 pt-12 text-slate-900 antialiased">
+    <div className="light min-h-screen pt-12 text-slate-900 antialiased">
       {/* Navbar */}
       <Navbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Main Content */}
-      <main className="light mx-auto flex max-w-screen-2xl bg-slate-50 text-slate-900 antialiased">
+      <main className="mx-auto flex max-w-screen-2xl text-slate-900 antialiased">
         <aside className="relative">
           <Sidebar sidebarOpen={sidebarOpen} pathname={pathname} />
           {isMobile && sidebarOpen && (
@@ -59,6 +60,7 @@ export default function RootLayout() {
             : location.key;
         }}
       />
+      <ModalProvider />
     </div>
   );
 }

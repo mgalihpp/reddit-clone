@@ -52,7 +52,10 @@ const CommunitySlugPage = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ['slug-subreddit', slug],
     queryFn: async () => {
-      const data = await SubredditService.getSlugSubreddit(slug as string);
+      const data = await SubredditService.getSlugSubreddit(
+        slug as string,
+        session?.user?.id,
+      );
 
       return data;
     },
@@ -125,8 +128,6 @@ const CommunitySlugPage = () => {
   useDocumentTitle(dynamicTitle(`r/${data?.subreddit.name ?? ''}`));
   useCursorWait(isPending || uploadLoading);
 
-  console.log(dropDownOpen, dialogOpen);
-
   return isLoading ? (
     <Loader container />
   ) : !data ? (
@@ -156,7 +157,7 @@ const CommunitySlugPage = () => {
             Create Post
           </Button>
 
-          {data.subreddit.creatorId !== session?.id ? (
+          {data.subreddit.creatorId !== session.user?.id ? (
             <SubscribeBtn
               isSubscribed={data.isSubcribed}
               subredditId={data.subreddit.id}
@@ -286,7 +287,7 @@ const CommunitySlugPage = () => {
                 Create Post
               </Button>
 
-              {data.subreddit.creatorId !== session?.id ? (
+              {data.subreddit.creatorId !== session.user?.id ? (
                 <SubscribeBtn
                   isSubscribed={data.isSubcribed}
                   subredditId={data.subreddit.id}

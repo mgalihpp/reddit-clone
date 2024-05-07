@@ -22,8 +22,8 @@ const UserOverView = () => {
             return acc;
           }, 0);
 
-          const currentVote = session
-            ? post.votes.find((vote) => vote.userId === session.id)
+          const currentVote = session.user
+            ? post.votes.find((vote) => vote.userId === session.user?.id)
             : undefined;
 
           return (

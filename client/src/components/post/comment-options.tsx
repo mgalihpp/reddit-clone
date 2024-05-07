@@ -55,7 +55,7 @@ const CommentOptions: React.FC<CommentOptionsProps> = ({
             <Flag className="size-5" />
             Report
           </DropdownMenuItem>
-          {session?.id === authorId && (
+          {session.user?.id === authorId && (
             <DropdownMenuItem
               className="flex w-full items-center gap-3 px-4 py-3"
               onClick={() => {

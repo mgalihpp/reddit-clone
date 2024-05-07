@@ -58,13 +58,17 @@ class SubredditService {
   }
 
   async getAllSubreddit() {
-    const subreddits = await db.subreddit.findMany();
+    const subreddits = await db.subreddit.findMany({
+      include: {
+        subscribers: true,
+      },
+    });
 
     return subreddits;
   }
 
-  async getSlugSubreddit(req: Request, payload: subredditPayload) {
-    const { name: slug } = payload;
+  async getSlugSubreddit(payload: subredditPayload) {
+    const { name: slug, userId } = payload;
 
     const subreddit = await db.subreddit.findFirst({
       where: {
@@ -91,7 +95,7 @@ class SubredditService {
           name: slug,
         },
         user: {
-          id: req.user?.id,
+          id: userId ?? '',
         },
       },
     });

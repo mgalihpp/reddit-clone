@@ -13,7 +13,7 @@ const CustomFeed: React.FC = () => {
   });
 
   if (!posts || isLoading) {
-    return <Loader />;
+    return <Loader className='col-span-2' />;
   }
 
   return <PostFeed initialPosts={posts} />;

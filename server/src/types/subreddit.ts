@@ -1,5 +1,6 @@
 export type subredditPayload = {
   name: string;
+  userId?: string
 };
 
 export type subscriptionPayload = {

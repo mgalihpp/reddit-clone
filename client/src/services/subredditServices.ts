@@ -32,10 +32,12 @@ export const SubredditService = {
     return data;
   },
 
-  getSlugSubreddit: async (name: string) => {
-    const { data } = await apiInstance.get<SlugSubredditResponse>(
+  getSlugSubreddit: async (name: string, userId?: string) => {
+    const { data } = await apiInstance.post<SlugSubredditResponse>(
       `/api/subreddit/slug?name=${name}`,
-      token.authorization(),
+      {
+        userId: userId,
+      },
     );
 
     return data;

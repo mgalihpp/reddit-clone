@@ -102,6 +102,7 @@ const EditSubreddit: React.FC<EditSubredditProps> = ({
                 placeholder="(optional)"
                 autoFocus
                 onChange={(e) => setDescription(e.target.value)}
+                className='max-h-96'
               />
 
               <Button

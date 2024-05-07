@@ -11,7 +11,6 @@ import SignUp from '@/components/auth/sign-up';
 import SignIn from '@/components/auth/sign-in';
 import { SessionProvider } from '@/providers/SessionProvider';
 import NotFound from '@/not-found';
-import CreatePost from '@/pages/r/submit/create-post';
 import Loader from '@/components/loader';
 
 const App = React.lazy(() => import('@/App'));
@@ -26,14 +25,10 @@ const UserPage = React.lazy(() => import('@/pages/user/user-page'));
 const UserOverView = React.lazy(() => import('@/pages/user/user-overview'));
 const UserPosts = React.lazy(() => import('@/pages/user/user-posts'));
 const UserComments = React.lazy(() => import('@/pages/user/user-comments'));
+const CreatePost = React.lazy(() => import('@/pages/r/submit/create-post'));
 
 const privateRoutesPath = [
   { path: '/settings', element: UserSettings },
-  { path: '/r/create', element: CreateCommunityPage },
-  { path: '/r/:slug', element: CommunitySlugPage },
-  { path: '/r/:slug/post/:id', element: SinglePost },
-  { path: '/r/:slug/submit', element: CreatePost },
-  // { path: '/user/:username', element: UserPage },
 ];
 
 export const router = createBrowserRouter(
@@ -102,6 +97,14 @@ export const router = createBrowserRouter(
           />
         </Route>
 
+        {/* COMMUNITY ROUTES */}
+        <Route path="/r/*">
+          <Route path="create" element={<CreateCommunityPage />} />
+          <Route path=":slug" element={<CommunitySlugPage />} />
+          <Route path=":slug/post/:id" element={<SinglePost />} />
+          <Route path=":slug/submit" element={<CreatePost />} />
+        </Route>
+
         {/* PRIVATE ROUTES */}
         {privateRoutesPath.map(({ path, element: Component }, index) => (
           <Route
@@ -110,7 +113,7 @@ export const router = createBrowserRouter(
             element={
               <Suspense fallback={<Loader container2 />}>
                 <PrivateRoute>
-                  <Component />
+                <Component />
                 </PrivateRoute>
               </Suspense>
             }

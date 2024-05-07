@@ -50,10 +50,10 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
     }
   }, [entry, fetchNextPage]);
 
-  const posts = data.pages.flatMap((page) => page) ?? initialPosts;
+  const posts = data?.pages?.flatMap((page) => page) ?? initialPosts;
 
   return (
-    <ul className="col-span-2 flex flex-col space-y-6">
+    <ul className="col-span-2 flex flex-col space-y-0">
       {posts.map((post, index) => {
         const votesAmt = post.votes.reduce((acc, vote) => {
           if (vote.type === 'UP') return acc + 1;
@@ -62,7 +62,7 @@ const PostFeed: React.FC<PostFeedProps> = ({ initialPosts, subredditName }) => {
         }, 0);
 
         const currentVote = post.votes.find(
-          (vote) => vote.userId === session?.id,
+          (vote) => vote.userId === session.user?.id,
         );
 
         if (index === posts.length - 1) {

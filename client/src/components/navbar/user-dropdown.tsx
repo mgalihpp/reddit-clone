@@ -37,7 +37,7 @@ const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link to={`/user/${session?.username}`}>Profile</Link>
+          <Link to={`/user/${session.user?.username}`}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link to="/r/create">Create Community</Link>
@@ -52,7 +52,7 @@ const UserDropDown: React.FC<UserDropDownProps> = ({ user }) => {
             e.preventDefault();
             dispacth(resetState());
 
-            return (window.location.href = '/sign-in');
+            return window.location.reload();
           }}
         >
           Logout

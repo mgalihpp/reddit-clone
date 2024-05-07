@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useEffect } from "react";
-import { UserService } from "@/services/userServices";
-import { useNavigate } from "react-router-dom";
+import React, { createContext, useContext, useEffect } from 'react';
+import { UserService } from '@/services/userServices';
+import { useNavigate } from 'react-router-dom';
 
-const SessionContext = createContext<User | null | undefined>(null);
+const SessionContext = createContext<{
+  user: UserWithSubscritions | null | undefined;
+  refetch: () => void;
+}>({ user: null, refetch: () => {} });
 
 interface SessionProviderProps {
   children: React.ReactNode;
@@ -11,7 +14,7 @@ interface SessionProviderProps {
 export const SessionProvider: React.FC<SessionProviderProps> = ({
   children,
 }) => {
-  const user = UserService.useSession();
+  const { user, refetch } = UserService.useSession();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,9 +24,13 @@ export const SessionProvider: React.FC<SessionProviderProps> = ({
   }, [user, navigate]);
 
   return (
-    <SessionContext.Provider value={user}>{children}</SessionContext.Provider>
+    <SessionContext.Provider value={{ user, refetch }}>
+      {children}
+    </SessionContext.Provider>
   );
 };
 
-export const useSession = (): User | null | undefined =>
-  useContext(SessionContext);
+export const useSession = (): {
+  user: UserWithSubscritions | null | undefined;
+  refetch: () => void;
+} => useContext(SessionContext);
