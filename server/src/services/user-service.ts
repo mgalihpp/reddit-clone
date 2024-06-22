@@ -94,6 +94,12 @@ class UserService {
 
     return { user, accessToken };
   }
+
+  async getAllUser(){
+    const users = await db.user.findMany();
+
+    return users
+  }
 }
 
 export default new UserService();

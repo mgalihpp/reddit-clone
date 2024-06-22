@@ -27,9 +27,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Separator } from '@/components/ui/separator';
+import { UserService } from '@/services/userServices';
 
 const CommunitySlugPage = () => {
   const session = useSession();
+  const user = UserService.useAuth();
   const { slug } = useParams();
   const { pathname } = useLocation();
   const navigate = useNavigate();
@@ -50,13 +52,12 @@ const CommunitySlugPage = () => {
   }, [pathname, navigate]);
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ['slug-subreddit', slug],
+    queryKey: ['slug-subreddit', slug, user],
     queryFn: async () => {
       const data = await SubredditService.getSlugSubreddit(
         slug as string,
-        session?.user?.id,
+        user?.id,
       );
-
       return data;
     },
     refetchOnWindowFocus: false,

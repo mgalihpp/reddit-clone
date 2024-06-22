@@ -7,5 +7,6 @@ const router = express.Router();
 router.get('/', authenticatedToken, userController.getUser);
 router.put('/', authenticatedToken, userController.updateUser);
 router.get('/username', userController.getUserByUsername);
+router.get('/allusers', userController.getAllUser);
 
 export default router;

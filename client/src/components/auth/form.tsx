@@ -21,6 +21,8 @@ import { toast } from 'react-toastify';
 import { login, register } from '@/actions/authActions';
 import { useLocation } from 'react-router-dom';
 import { setModalOpen } from '@/reducers/modalReducer';
+import { useQueryClient } from '@tanstack/react-query';
+import { useCursorWait } from '@/hooks/use-cursor-wait';
 
 interface AuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -41,6 +43,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
   const [authAction, setAuthAction] = useState<string>('');
 
   const { pathname } = useLocation();
+
+  const queryClient = useQueryClient();
 
   const loginForm = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -78,6 +82,9 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
       if (value.meta.requestStatus === 'fulfilled') {
         dispacth(setModalOpen(false));
         toast.success(`Login Success!`);
+        queryClient.invalidateQueries({
+          queryKey: ['user-session'],
+        });
       } else if (value.meta.requestStatus === 'rejected') {
         toast.error(`Invalid password or credentials!`);
       }
@@ -94,6 +101,8 @@ const AuthForm: React.FC<AuthFormProps> = ({ className, ...props }) => {
       }
     });
   };
+
+  useCursorWait(isLoading);
 
   return (
     <div

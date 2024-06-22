@@ -19,10 +19,20 @@ class UserController {
 
       const user = {
         ...req.user,
-        subscriptions
-      }
+        subscriptions,
+      };
 
       return res.status(HttpStatus.OK).json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getAllUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await userService.getAllUser();
+
+      return res.status(HttpStatus.OK).json(users);
     } catch (error) {
       next(error);
     }
